@@ -1,0 +1,144 @@
+{
+    "auth": [
+        {
+            "name": "login",
+            "method": "POST",
+            "path": "/token",
+            "description": "Authenticate user and retrieve token"
+        },
+        {
+            "name": "register",
+            "method": "POST",
+            "path": "/auth/register",
+            "description": "Register a new user"
+        }
+    ],
+    "users": [
+        {
+            "name": "changePassword",
+            "method": "POST",
+            "path": "/users/:id/change-password",
+            "description": "Change user password"
+        },
+        {
+            "name": "getVoters",
+            "method": "GET",
+            "path": "/admin/users",
+            "description": "Retrieve all users (admin only)"
+        },
+        {
+            "name": "getVoter",
+            "method": "GET",
+            "path": "/admin/users/:id",
+            "description": "Retrieve a specific user by ID (admin only)"
+        },
+        {
+            "name": "updateVoter",
+            "method": "PUT",
+            "path": "/admin/users/:id",
+            "description": "Update user details (admin only)"
+        },
+        {
+            "name": "deleteVoter",
+            "method": "DELETE",
+            "path": "/admin/users/:id",
+            "description": "Delete a user (admin only)"
+        }
+    ],
+    "parties": [
+        {
+            "name": "createParty",
+            "method": "POST",
+            "path": "/admin/parties",
+            "description": "Create a new political party (admin only)"
+        },
+        {
+            "name": "getParties",
+            "method": "GET",
+            "path": "/parties",
+            "description": "Retrieve all political parties"
+        },
+        {
+            "name": "getParty",
+            "method": "GET",
+            "path": "/parties/:id",
+            "description": "Retrieve a specific political party by ID"
+        },
+        {
+            "name": "updateParty",
+            "method": "PUT",
+            "path": "/admin/parties/:id",
+            "description": "Update political party details (admin only)"
+        },
+        {
+            "name": "deleteParty",
+            "method": "DELETE",
+            "path": "/admin/parties/:id",
+            "description": "Delete a political party (admin only)"
+        }
+    ],
+    "candidates": [
+        {
+            "name": "createCandidate",
+            "method": "POST",
+            "path": "/admin/candidates",
+            "description": "Create a new candidate (admin only)"
+        },
+        {
+            "name": "getCandidates",
+            "method": "GET",
+            "path": "/admin/candidates",
+            "description": "Retrieve all candidates (admin only)"
+        },
+        {
+            "name": "getCandidate",
+            "method": "GET",
+            "path": "/admin/candidates/:id",
+            "description": "Retrieve a specific candidate by ID (admin only)"
+        },
+        {
+            "name": "updateCandidate",
+            "method": "PUT",
+            "path": "/admin/candidates/:id",
+            "description": "Update candidate details (admin only)"
+        },
+        {
+            "name": "deleteCandidate",
+            "method": "DELETE",
+            "path": "/admin/candidates/:id",
+            "description": "Delete a candidate (admin only)"
+        }
+    ],
+    "elections": [
+        {
+            "name": "createElection",
+            "method": "POST",
+            "path": "/api/elections",
+            "description": "Create a new election"
+        },
+        {
+            "name": "getElections",
+            "method": "GET",
+            "path": "/api/elections",
+            "description": "Retrieve all elections"
+        },
+        {
+            "name": "getElection",
+            "method": "GET",
+            "path": "/api/elections/:id",
+            "description": "Retrieve a specific election by ID"
+        },
+        {
+            "name": "updateElection",
+            "method": "PUT",
+            "path": "/api/elections/:id",
+            "description": "Update election details"
+        },
+        {
+            "name": "deleteElection",
+            "method": "DELETE",
+            "path": "/api/elections/:id",
+            "description": "Delete an election"
+        }
+    ]
+}
