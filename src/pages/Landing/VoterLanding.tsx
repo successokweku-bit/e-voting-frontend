@@ -8,24 +8,24 @@ import { Badge } from "@/components/ui/badge";
 const DUMMY_ELECTIONS = [
   {
     id: "1",
-    title: "2024 Student Government Elections",
+    title: "2023 Nigerian General Elections",
     status: "Active",
-    startDate: "Nov 20, 2024",
-    endDate: "Dec 5, 2024",
+    startDate: "Feb 25, 2023",
+    endDate: "Feb 26, 2023",
   },
   {
     id: "2",
-    title: "Faculty Board Elections",
-    status: "Active",
-    startDate: "Dec 1, 2024",
-    endDate: "Dec 15, 2024",
+    title: "2023 Gubernatorial Elections",
+    status: "Upcoming",
+    startDate: "Mar 11, 2023",
+    endDate: "Mar 12, 2023",
   },
   {
     id: "3",
-    title: "Department Representative",
+    title: "FCT Area Council Elections",
     status: "Upcoming",
-    startDate: "Jan 10, 2025",
-    endDate: "Jan 20, 2025",
+    startDate: "May 20, 2023",
+    endDate: "May 20, 2023",
   }
 ] as any[];
 
@@ -47,9 +47,17 @@ export default function VoterLanding() {
       {/* Hero Header */}
       <div className="bg-[#134E4A] text-white py-16 px-4 md:px-10">
         <div className="container mx-auto">
-          <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm mb-6">
-            <ShieldCheck className="mr-2 h-4 w-4" />
-            Secure & Transparent Voting
+          <div className="flex justify-between items-start mb-6">
+            <div className="inline-flex items-center rounded-full border border-white/20 bg-white/10 px-3 py-1 text-sm font-medium text-white backdrop-blur-sm">
+              <ShieldCheck className="mr-2 h-4 w-4" />
+              Secure & Transparent Voting
+            </div>
+            <Button
+              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </Button>
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">

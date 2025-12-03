@@ -9,36 +9,42 @@ import { Badge } from "@/components/ui/badge";
 const MOCK_POSITIONS = [
   {
     id: 1,
-    title: "Student Body President",
-    description: "Lead the student government and represent all students",
+    title: "President of Nigeria",
+    description: "Head of State and Government, Commander-in-Chief of the Armed Forces",
     icon: "1",
   },
   {
     id: 2,
     title: "Vice President",
-    description: "Assist the president and lead special initiatives",
+    description: "Second-in-command to the President",
     icon: "2",
   },
   {
     id: 3,
-    title: "Treasurer",
-    description: "Manage student government budget and finances",
+    title: "Senator (Lagos Central)",
+    description: "Representative for Lagos Central Senatorial District",
     icon: "3",
   },
   {
     id: 4,
-    title: "Secretary",
-    description: "Maintain records and communications",
+    title: "Senator (Kano South)",
+    description: "Representative for Kano South Senatorial District",
     icon: "4",
+  },
+  {
+    id: 5,
+    title: "Senator (Rivers East)",
+    description: "Representative for Rivers East Senatorial District",
+    icon: "5",
   },
 ];
 
 const DUMMY_ELECTION = {
   id: "1",
-  title: "2024 Student Government Elections",
+  title: "2023 Nigerian General Elections",
   status: "Active",
-  startDate: "Nov 20, 2024",
-  endDate: "Dec 5, 2024",
+  startDate: "Feb 25, 2023",
+  endDate: "Feb 26, 2023",
 } as never;
 
 export default function VoterElectionDetails() {
@@ -62,14 +68,22 @@ export default function VoterElectionDetails() {
       {/* Header Section */}
       <div className="bg-[#134E4A] text-white py-12 px-4 md:px-10">
         <div className="container mx-auto">
-          <Button
-            variant="ghost"
-            className="text-white/80 hover:text-white hover:bg-white/10 mb-8 pl-0 -ml-3"
-            onClick={() => navigate("/")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Elections
-          </Button>
+          <div className="flex justify-between items-start mb-8">
+            <Button
+              variant="ghost"
+              className="text-white/80 hover:text-white hover:bg-white/10 pl-0 -ml-3"
+              onClick={() => navigate("/")}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Elections
+            </Button>
+            <Button
+              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </Button>
+          </div>
 
           <div className="flex items-center gap-4 mb-6">
             <Badge className="bg-[#10B981] hover:bg-[#059669] text-white border-none rounded-full px-3 py-1 text-sm font-medium">

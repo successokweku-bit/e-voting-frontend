@@ -18,39 +18,124 @@ import { useAuth } from "@/contexts/AuthContext";
 
 // Mock positions data
 const POSITIONS_DATA: Record<string, { title: string; description: string }> = {
-  "1": { title: "Student Body President", description: "Lead the student government and represent all students" },
-  "2": { title: "Vice President", description: "Assist the president and lead special initiatives" },
-  "3": { title: "Treasurer", description: "Manage student government budget and finances" },
-  "4": { title: "Secretary", description: "Maintain records and communications" },
+  "1": { title: "President of Nigeria", description: "Head of State and Government, Commander-in-Chief of the Armed Forces" },
+  "2": { title: "Vice President", description: "Second-in-command to the President" },
+  "3": { title: "Senator (Lagos Central)", description: "Representative for Lagos Central Senatorial District" },
+  "4": { title: "Senator (Kano South)", description: "Representative for Kano South Senatorial District" },
+  "5": { title: "Senator (Rivers East)", description: "Representative for Rivers East Senatorial District" },
 };
 
 const DUMMY_CANDIDATES = [
   {
     id: "1",
-    name: "David Kim",
-    party: "Progressive Student Alliance",
-    position: "Vice President",
+    name: "Bola Ahmed Tinubu",
+    party: "All Progressives Congress (APC)",
+    position: "President of Nigeria",
     election_id: "1",
-    bio: "Sophomore with experience in student organizations",
-    initials: "DK",
+    bio: "Former Governor of Lagos State and National Leader of the APC.",
+    initials: "BAT",
     priorities: [
-      "Student organization funding",
-      "Campus diversity initiatives",
-      "Community partnerships"
+      "Economic Renewal",
+      "National Security",
+      "Infrastructure Development"
     ]
   },
   {
     id: "2",
-    name: "Emma Rodriguez",
-    party: "Students United",
+    name: "Atiku Abubakar",
+    party: "Peoples Democratic Party (PDP)",
+    position: "President of Nigeria",
+    election_id: "1",
+    bio: "Former Vice President of Nigeria and businessman.",
+    initials: "AA",
+    priorities: [
+      "Unifying Nigeria",
+      "Economic Recovery",
+      "Education Reform"
+    ]
+  },
+  {
+    id: "3",
+    name: "Peter Obi",
+    party: "Labour Party (LP)",
+    position: "President of Nigeria",
+    election_id: "1",
+    bio: "Former Governor of Anambra State and businessman.",
+    initials: "PO",
+    priorities: [
+      "Production over Consumption",
+      "Cost of Governance Reduction",
+      "Institutional Reforms"
+    ]
+  },
+  {
+    id: "4",
+    name: "Kashim Shettima",
+    party: "All Progressives Congress (APC)",
     position: "Vice President",
     election_id: "1",
-    bio: "Junior passionate about student engagement",
-    initials: "ER",
+    bio: "Former Governor of Borno State.",
+    initials: "KS",
     priorities: [
-      "More social events",
-      "Career development resources",
-      "Athletic program support"
+      "Security Strategy",
+      "Agricultural Growth",
+      "Youth Empowerment"
+    ]
+  },
+  {
+    id: "5",
+    name: "Ifeanyi Okowa",
+    party: "Peoples Democratic Party (PDP)",
+    position: "Vice President",
+    election_id: "1",
+    bio: "Governor of Delta State.",
+    initials: "IO",
+    priorities: [
+      "Healthcare Systems",
+      "Educational Development",
+      "Fiscal Federalism"
+    ]
+  },
+  {
+    id: "6",
+    name: "Yusuf Datti Baba-Ahmed",
+    party: "Labour Party (LP)",
+    position: "Vice President",
+    election_id: "1",
+    bio: "Economist and politician.",
+    initials: "YDB",
+    priorities: [
+      "Education",
+      "Economic Stability",
+      "Rule of Law"
+    ]
+  },
+  {
+    id: "7",
+    name: "Wasiu Eshinlokun-Sanni",
+    party: "All Progressives Congress (APC)",
+    position: "Senator (Lagos Central)",
+    election_id: "1",
+    bio: "Deputy Speaker of the Lagos State House of Assembly.",
+    initials: "WES",
+    priorities: [
+      "Legislative Excellence",
+      "Community Development",
+      "Youth Engagement"
+    ]
+  },
+  {
+    id: "8",
+    name: "Gomez Adewale",
+    party: "Peoples Democratic Party (PDP)",
+    position: "Senator (Lagos Central)",
+    election_id: "1",
+    bio: "Businessman and philanthropist.",
+    initials: "GA",
+    priorities: [
+      "Social Welfare",
+      "Urban Renewal",
+      "Transparent Representation"
     ]
   }
 ] as any[];
@@ -114,14 +199,22 @@ export default function VoterPositionCandidates() {
     <div className="min-h-screen bg-slate-50">
       <div className="bg-[#134E4A] text-white py-12 px-4 md:px-10">
         <div className="container mx-auto">
-          <Button
-            variant="ghost"
-            className="text-white/80 hover:text-white hover:bg-white/10 mb-8 pl-0 -ml-3"
-            onClick={() => navigate(`/vote/elections/${electionId}`)}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Positions
-          </Button>
+          <div className="flex justify-between items-start mb-8">
+            <Button
+              variant="ghost"
+              className="text-white/80 hover:text-white hover:bg-white/10 pl-0 -ml-3"
+              onClick={() => navigate(`/vote/elections/${electionId}`)}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+              Back to Positions
+            </Button>
+            <Button
+              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </Button>
+          </div>
 
           <div className="mb-6">
             <Badge variant="outline" className="text-white border-white/20 bg-white/10 hover:bg-white/20 px-4 py-1.5 text-sm font-normal rounded-full gap-2">
@@ -146,13 +239,12 @@ export default function VoterPositionCandidates() {
         {positionCandidates.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-2">
             {positionCandidates.map((candidate) => (
-              <Card 
-                key={candidate.id} 
-                className={`relative cursor-pointer transition-all duration-200 ${
-                  selectedCandidateId === candidate.id 
-                    ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20' 
-                    : 'border-slate-200 hover:border-slate-300'
-                }`}
+              <Card
+                key={candidate.id}
+                className={`relative cursor-pointer transition-all duration-200 ${selectedCandidateId === candidate.id
+                  ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
+                  : 'border-slate-200 hover:border-slate-300'
+                  }`}
                 onClick={() => handleSelectCandidate(candidate.id)}
               >
                 <CardContent className="p-6">
@@ -166,12 +258,11 @@ export default function VoterPositionCandidates() {
                         <p className="text-sm text-muted-foreground">{candidate.party}</p>
                       </div>
                     </div>
-                    <div 
-                      className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${
-                        selectedCandidateId === candidate.id
-                          ? 'border-[#134E4A] bg-[#134E4A]'
-                          : 'border-slate-300'
-                      }`}
+                    <div
+                      className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedCandidateId === candidate.id
+                        ? 'border-[#134E4A] bg-[#134E4A]'
+                        : 'border-slate-300'
+                        }`}
                     >
                       {selectedCandidateId === candidate.id && (
                         <div className="h-3 w-3 rounded-full bg-white" />
@@ -197,11 +288,10 @@ export default function VoterPositionCandidates() {
                   </div>
 
                   <Button
-                    className={`w-full mt-4 ${
-                      selectedCandidateId === candidate.id
-                        ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                    }`}
+                    className={`w-full mt-4 ${selectedCandidateId === candidate.id
+                      ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      }`}
                     onClick={(e) => {
                       e.stopPropagation();
                       handleSelectCandidate(candidate.id);

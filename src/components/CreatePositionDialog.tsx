@@ -26,7 +26,7 @@ export function CreatePositionDialog({ children, electionId }: { children: React
     return (
         <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{children}</DialogTrigger>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Create Position</DialogTitle>
                     <DialogDescription>
