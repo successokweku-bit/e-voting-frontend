@@ -50,7 +50,9 @@ export interface Candidate {
   party_id: string;
   election_id: string;
   position_id: string;
-
+  name?: string;
+  party?: string;
+  position?: string;
 }
 
 export interface Election {

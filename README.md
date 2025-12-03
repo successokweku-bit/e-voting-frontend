@@ -1,73 +1,101 @@
-# React + TypeScript + Vite
+# E-Voting Application
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern, secure, and user-friendly electronic voting application built with React, TypeScript, and Vite. This application allows users to register, view elections, and cast their votes, while providing administrators with tools to manage elections, candidates, and parties.
 
-Currently, two official plugins are available:
+## 🚀 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+-   **User Authentication**: Secure registration and login system.
+-   **Dashboard**:
+    -   **Voter Dashboard**: View upcoming elections, active polls, and voting history.
+    -   **Admin Dashboard**: Manage elections, candidates, parties, and positions.
+-   **Election Management**: Create, update, and monitor elections.
+-   **Candidate & Party Management**: Manage political parties and candidates for various positions.
+-   **Voting System**: Secure and intuitive interface for casting votes.
+-   **Real-time Updates**: (If applicable, or mention React Query for efficient data fetching).
+-   **Responsive Design**: Fully responsive UI built with Tailwind CSS.
 
-## React Compiler
+## 🛠️ Tech Stack
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+-   **Frontend Framework**: [React](https://react.dev/)
+-   **Language**: [TypeScript](https://www.typescriptlang.org/)
+-   **Build Tool**: [Vite](https://vitejs.dev/)
+-   **Styling**: [Tailwind CSS](https://tailwindcss.com/)
+-   **UI Components**: [Radix UI](https://www.radix-ui.com/) & [Lucide React](https://lucide.dev/) (Icons)
+-   **State Management & Data Fetching**: [TanStack Query (React Query)](https://tanstack.com/query/latest)
+-   **Form Handling**: [Formik](https://formik.org/) & [Yup](https://github.com/jquense/yup) (Validation)
+-   **Routing**: [React Router](https://reactrouter.com/)
+-   **Date Handling**: [date-fns](https://date-fns.org/)
+-   **Notifications**: [Sonner](https://sonner.emilkowal.ski/)
 
-## Expanding the ESLint configuration
+## 📂 Project Structure
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
-
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```
+src/
+├── assets/         # Static assets (images, fonts, etc.)
+├── components/     # Reusable UI components
+├── constants/      # App constants
+├── contexts/       # React Context providers
+├── hooks/          # Custom React hooks
+├── layouts/        # Page layouts
+├── lib/            # Utility libraries (e.g., utils.ts)
+├── pages/          # Application pages (Dashboard, Landing, etc.)
+├── schemas/        # Validation schemas (Yup)
+├── services/       # API service calls
+├── types/          # TypeScript type definitions
+├── App.tsx         # Main application component
+└── main.tsx        # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🏁 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+### Prerequisites
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+-   Node.js (v18 or higher recommended)
+-   npm or yarn
+
+### Installation
+
+1.  Clone the repository:
+    ```bash
+    git clone https://github.com/successokweku-bit/e-voting-frontend.git
+    cd voting-app
+    ```
+
+2.  Install dependencies:
+    ```bash
+    npm install
+    ```
+
+### Running the Application
+
+Start the development server:
+
+```bash
+npm run dev
 ```
+
+The application will be available at `http://localhost:5173` (or the port shown in your terminal).
+
+### Building for Production
+
+To build the application for production:
+
+```bash
+npm run build
+```
+
+### Linting
+
+To run the linter:
+
+```bash
+npm run lint
+```
+
+## 🤝 Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## 📄 License
+
+This project is licensed under the MIT License.

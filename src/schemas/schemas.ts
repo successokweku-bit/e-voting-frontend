@@ -66,6 +66,10 @@ export const candidateSchema = Yup.object().shape({
   party_id: Yup.string().required("Party is required"),
   position_id: Yup.string().required("Position is required"),
   election_id: Yup.string().required("Election is required"),
+  // Optional fields for UI convenience, stripped before sending if needed, 
+  // or we assume the UI handles the mapping. 
+  // Actually, for the Edit form to work with the current schema, we need to ensure 
+  // we are validating the IDs.
 });
 
 export const electionSchema = Yup.object().shape({
@@ -80,7 +84,7 @@ export const electionSchema = Yup.object().shape({
 export const positionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
   description: Yup.string().required("Description is required"),
-  election_id: Yup.number().required("Election ID is required"),
+  election_id: Yup.string().required("Election ID is required"),
 });
 
 export const changePasswordSchema = Yup.object().shape({

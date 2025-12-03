@@ -43,10 +43,11 @@ export function EditCandidateDialog({ candidate, open, onOpenChange }: EditCandi
                 </DialogHeader>
                 <Formik
                     initialValues={{
-                        name: candidate.name,
-                        party: candidate.party,
-                        position: candidate.position,
-                        election_id: candidate.election_id || "",
+                        user_id: candidate.user_id,
+                        party_id: candidate.party_id,
+                        position_id: candidate.position_id,
+                        election_id: candidate.election_id,
+                        name: candidate.name || "",
                     }}
                     validationSchema={candidateSchema}
                     onSubmit={(values, { resetForm }) => {
@@ -66,42 +67,41 @@ export function EditCandidateDialog({ candidate, open, onOpenChange }: EditCandi
                             <FieldGroup>
                                 <UIField>
                                     <FieldLabel htmlFor="name">Name</FieldLabel>
-                                    <Field name="name" as={Input} id="name" type="text" placeholder="John Doe" />
-                                    <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
+                                    <Field name="name" as={Input} id="name" type="text" placeholder="John Doe" disabled />
                                 </UIField>
                                 <UIField>
-                                    <FieldLabel htmlFor="party">Party</FieldLabel>
+                                    <FieldLabel htmlFor="party_id">Party</FieldLabel>
                                     <Field
-                                        name="party"
+                                        name="party_id"
                                         as="select"
-                                        id="party"
+                                        id="party_id"
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <option value="">Select a party</option>
                                         {parties?.map((party) => (
-                                            <option key={party.id} value={party.name}>
+                                            <option key={party.id} value={party.id}>
                                                 {party.name}
                                             </option>
                                         ))}
                                     </Field>
-                                    <ErrorMessage name="party" component="div" className="text-red-500 text-sm" />
+                                    <ErrorMessage name="party_id" component="div" className="text-red-500 text-sm" />
                                 </UIField>
                                 <UIField>
-                                    <FieldLabel htmlFor="position">Position</FieldLabel>
+                                    <FieldLabel htmlFor="position_id">Position</FieldLabel>
                                     <Field
-                                        name="position"
+                                        name="position_id"
                                         as="select"
-                                        id="position"
+                                        id="position_id"
                                         className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                                     >
                                         <option value="">Select a position</option>
                                         {positions?.map((position) => (
-                                            <option key={position.id} value={position.title}>
+                                            <option key={position.id} value={position.id}>
                                                 {position.title}
                                             </option>
                                         ))}
                                     </Field>
-                                    <ErrorMessage name="position" component="div" className="text-red-500 text-sm" />
+                                    <ErrorMessage name="position_id" component="div" className="text-red-500 text-sm" />
                                 </UIField>
                                 <UIField>
                                     <FieldLabel htmlFor="election_id">Election</FieldLabel>

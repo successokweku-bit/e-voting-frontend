@@ -37,7 +37,7 @@ export function CreatePositionDialog({ children, electionId }: { children: React
                     initialValues={{
                         title: "",
                         description: "",
-                        election_id: electionId ? Number(electionId) : 0,
+                        election_id: electionId ? String(electionId) : "",
                     }}
                     validationSchema={positionSchema}
                     onSubmit={(values, { resetForm }) => {
@@ -65,7 +65,7 @@ export function CreatePositionDialog({ children, electionId }: { children: React
                                 {!electionId && (
                                     <UIField>
                                         <FieldLabel htmlFor="election_id">Election ID</FieldLabel>
-                                        <Field name="election_id" as={Input} id="election_id" type="number" />
+                                        <Field name="election_id" as={Input} id="election_id" type="text" />
                                         <ErrorMessage name="election_id" component="div" className="text-red-500 text-sm" />
                                     </UIField>
                                 )}
