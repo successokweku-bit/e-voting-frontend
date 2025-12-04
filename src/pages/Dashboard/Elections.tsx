@@ -10,12 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreateElectionDialog } from "@/components/CreateElectionDialog"
-import { EditElectionDialog } from "@/components/EditElectionDialog"
-import { DeleteElectionDialog } from "@/components/DeleteElectionDialog"
+import { CreateElectionDialog } from "@/components/election/CreateElectionDialog"
+import { EditElectionDialog } from "@/components/election/EditElectionDialog"
+import { DeleteElectionDialog } from "@/components/election/DeleteElectionDialog"
 import { useElections } from "@/hooks/useElections"
 
-import { ViewElectionDialog } from "@/components/ViewElectionDialog"
+import { ViewElectionDialog } from "@/components/election/ViewElectionDialog"
 import { Eye } from "lucide-react"
 
 const ElectionActions = ({ election }: { election: Election }) => {

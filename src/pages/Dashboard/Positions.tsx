@@ -10,10 +10,10 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreatePositionDialog } from "@/components/CreatePositionDialog"
-import { EditPositionDialog } from "@/components/EditPositionDialog"
-import { DeletePositionDialog } from "@/components/DeletePositionDialog"
-import { ViewPositionDialog } from "@/components/ViewPositionDialog"
+import { CreatePositionDialog } from "@/components/position/CreatePositionDialog"
+import { EditPositionDialog } from "@/components/position/EditPositionDialog"
+import { DeletePositionDialog } from "@/components/position/DeletePositionDialog"
+import { ViewPositionDialog } from "@/components/position/ViewPositionDialog"
 import { usePositions } from "@/hooks/usePositions"
  
 const PositionActions = ({ position }: { position: Position }) => {
@@ -90,8 +90,8 @@ const columns: ColumnDef<Position>[] = [
     header: "Description",
   },
   {
-    accessorKey: "election_id",
-    header: "Election ID",
+    accessorKey: "election_title",
+    header: "Election Title",
   },
   {
     id: "actions",

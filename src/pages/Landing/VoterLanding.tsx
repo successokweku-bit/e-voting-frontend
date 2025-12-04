@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Users, ArrowRight, Clock, ShieldCheck, Vote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
+import { UserNav } from "@/components/UserNav";
 
 const DUMMY_ELECTIONS = [
   {
@@ -52,12 +53,7 @@ export default function VoterLanding() {
               <ShieldCheck className="mr-2 h-4 w-4" />
               Secure & Transparent Voting
             </div>
-            <Button
-              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </Button>
+            <UserNav />
           </div>
 
           <h1 className="text-5xl md:text-6xl font-bold mb-6 tracking-tight">

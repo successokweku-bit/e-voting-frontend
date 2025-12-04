@@ -10,13 +10,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreateCandidateDialog } from "@/components/CreateCandidateDialog"
-import { EditCandidateDialog } from "@/components/EditCandidateDialog"
-import { DeleteCandidateDialog } from "@/components/DeleteCandidateDialog"
+import { CreateCandidateDialog } from "@/components/candidate/CreateCandidateDialog"
+import { EditCandidateDialog } from "@/components/candidate/EditCandidateDialog"
+import { DeleteCandidateDialog } from "@/components/candidate/DeleteCandidateDialog"
 import { useElections } from "@/hooks/useElections"
 import { useCandidates } from "@/hooks/useCandidates"
 
-import { ViewCandidateDialog } from "@/components/ViewCandidateDialog"
+import { ViewCandidateDialog } from "@/components/candidate/ViewCandidateDialog"
 import { Eye } from "lucide-react"
 
 const CandidateActions = ({ candidate }: { candidate: Candidate }) => {

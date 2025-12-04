@@ -15,6 +15,7 @@ import {
 } from "@/components/ui/dialog";
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserNav } from "@/components/UserNav";
 
 // Mock positions data
 const POSITIONS_DATA: Record<string, { title: string; description: string }> = {
@@ -149,10 +150,7 @@ export default function VoterPositionCandidates() {
   const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
   const [isVoteDialogOpen, setIsVoteDialogOpen] = useState(false);
 
-  // Filter candidates for this election and position (mock logic for position matching)
-  // In a real app, we'd filter by position ID or name. 
-  // Here I'll just show all candidates for the election for demo purposes, 
-  // or filter if position matches candidate.position
+  // Filter candidates for this election and position  
   const positionInfo = POSITIONS_DATA[positionId || ""] || { title: "Position", description: "Select a candidate to cast your vote" };
   const positionTitle = positionInfo.title;
 
@@ -208,12 +206,7 @@ export default function VoterPositionCandidates() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Positions
             </Button>
-            <Button
-              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </Button>
+            <UserNav />
           </div>
 
           <div className="mb-6">
@@ -242,8 +235,8 @@ export default function VoterPositionCandidates() {
               <Card
                 key={candidate.id}
                 className={`relative cursor-pointer transition-all duration-200 ${selectedCandidateId === candidate.id
-                  ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
-                  : 'border-slate-200 hover:border-slate-300'
+                    ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
+                    : 'border-slate-200 hover:border-slate-300'
                   }`}
                 onClick={() => handleSelectCandidate(candidate.id)}
               >
@@ -260,8 +253,8 @@ export default function VoterPositionCandidates() {
                     </div>
                     <div
                       className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedCandidateId === candidate.id
-                        ? 'border-[#134E4A] bg-[#134E4A]'
-                        : 'border-slate-300'
+                          ? 'border-[#134E4A] bg-[#134E4A]'
+                          : 'border-slate-300'
                         }`}
                     >
                       {selectedCandidateId === candidate.id && (
@@ -289,8 +282,8 @@ export default function VoterPositionCandidates() {
 
                   <Button
                     className={`w-full mt-4 ${selectedCandidateId === candidate.id
-                      ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                        ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     onClick={(e) => {
                       e.stopPropagation();

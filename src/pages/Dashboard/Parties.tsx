@@ -10,12 +10,12 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
-import { CreatePartyDialog } from "@/components/CreatePartyDialog"
-import { EditPartyDialog } from "@/components/EditPartyDialog"
-import { DeletePartyDialog } from "@/components/DeletePartyDialog"
+import { CreatePartyDialog } from "@/components/party/CreatePartyDialog"
+import { EditPartyDialog } from "@/components/party/EditPartyDialog"
+import { DeletePartyDialog } from "@/components/party/DeletePartyDialog"
 import { useParties } from "@/hooks/useParties"
 
-import { ViewPartyDialog } from "@/components/ViewPartyDialog"
+import { ViewPartyDialog } from "@/components/party/ViewPartyDialog"
 import { Eye } from "lucide-react"
 
 const PartyActions = ({ party }: { party: Party }) => {

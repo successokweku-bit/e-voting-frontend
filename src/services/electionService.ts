@@ -12,15 +12,16 @@ export const createElection = async (data: Omit<Election, "id">) => {
 };
 
 export const getElections = async () => {
-  const response = await fetch(`${API_URL}/api/elections`, {
+  const response = await fetch(`${API_URL}/admin/elections`, {
     headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch elections");
-  return response.json();
+  const json = await response.json();
+  return json.data || [];
 };
 
 export const getElection = async (id: string) => {
-  const response = await fetch(`${API_URL}/api/elections/${id}`, {
+  const response = await fetch(`${API_URL}/admin/elections/${id}`, {
     headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch election");
@@ -28,7 +29,7 @@ export const getElection = async (id: string) => {
 };
 
 export const updateElection = async (id: string, data: Partial<Election>) => {
-  const response = await fetch(`${API_URL}/api/elections/${id}`, {
+  const response = await fetch(`${API_URL}/admin/elections/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -38,7 +39,7 @@ export const updateElection = async (id: string, data: Partial<Election>) => {
 };
 
 export const deleteElection = async (id: string) => {
-  const response = await fetch(`${API_URL}/api/elections/${id}`, {
+  const response = await fetch(`${API_URL}/admin/elections/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });

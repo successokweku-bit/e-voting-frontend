@@ -19,9 +19,12 @@ import { useCreatePosition } from "@/hooks/useCreatePosition";
 import { positionSchema } from "@/schemas/schemas";
 
 
+import { useElections } from "@/hooks/useElections";
+
 export function CreatePositionDialog({ children, electionId }: { children: React.ReactNode; electionId?: string }) {
     const [open, setOpen] = useState(false);
     const { mutate, isPending } = useCreatePosition();
+    const { data: elections } = useElections();
 
     return (
         <Dialog open={open} onOpenChange={setOpen}>
@@ -64,8 +67,20 @@ export function CreatePositionDialog({ children, electionId }: { children: React
                                 </UIField>
                                 {!electionId && (
                                     <UIField>
-                                        <FieldLabel htmlFor="election_id">Election ID</FieldLabel>
-                                        <Field name="election_id" as={Input} id="election_id" type="text" />
+                                        <FieldLabel htmlFor="election_id">Election</FieldLabel>
+                                        <Field
+                                            name="election_id"
+                                            as="select"
+                                            id="election_id"
+                                            className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                        >
+                                            <option value="">Select an election</option>
+                                            {elections?.map((election) => (
+                                                <option key={election.id} value={election.id}>
+                                                    {election.title}
+                                                </option>
+                                            ))}
+                                        </Field>
                                         <ErrorMessage name="election_id" component="div" className="text-red-500 text-sm" />
                                     </UIField>
                                 )}

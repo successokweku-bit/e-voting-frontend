@@ -10,12 +10,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import { type User } from "@/types/types"
-import { RegisterVoterDialog } from "@/components/RegisterVoterDialog"
-import { EditVoterDialog } from "@/components/EditVoterDialog"
-import { DeleteVoterDialog } from "@/components/DeleteVoterDialog"
+import { RegisterVoterDialog } from "@/components/voter/RegisterVoterDialog"
+import { EditVoterDialog } from "@/components/voter/EditVoterDialog"
+import { DeleteVoterDialog } from "@/components/voter/DeleteVoterDialog"
 import { useVoters } from "@/hooks/useVoters"
 
-import { ViewVoterDialog } from "@/components/ViewVoterDialog"
+import { ViewVoterDialog } from "@/components/voter/ViewVoterDialog"
 import { Eye } from "lucide-react"
 
 const VoterActions = ({ user }: { user: User }) => {
@@ -125,7 +125,7 @@ const columns: ColumnDef<User>[] = [
 export default function Voters() {
   const { data: voters, isLoading } = useVoters()
 
-   if (isLoading) {
+  if (isLoading) {
     return <div className="container mx-auto md:px-10 py-10">Loading...</div>
   }
 

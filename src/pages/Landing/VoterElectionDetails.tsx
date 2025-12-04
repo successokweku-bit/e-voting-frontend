@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Users, ChevronRight, CheckSquare } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { UserNav } from "@/components/UserNav";
 
 // Mock positions data since we don't have an endpoint for it yet
 const MOCK_POSITIONS = [
@@ -77,12 +78,7 @@ export default function VoterElectionDetails() {
               <ArrowLeft className="mr-2 h-4 w-4" />
               Back to Elections
             </Button>
-            <Button
-              className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
-              onClick={() => navigate("/login")}
-            >
-              Login
-            </Button>
+            <UserNav />
           </div>
 
           <div className="flex items-center gap-4 mb-6">

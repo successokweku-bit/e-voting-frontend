@@ -29,7 +29,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
   const { data: voters = [] } = useVoters();
   const { data: parties = [] } = useParties();
 
-  const upcomingElections = elections?.filter((e) => e.status === "Upcoming") || [];
+  // const upcomingElections = elections?.filter((e) => e.status === "Upcoming") || [];
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
@@ -116,7 +116,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                       }}
                     >
                       <option value="">Select an election</option>
-                      {upcomingElections.map((election) => (
+                      {elections?.map((election) => (
                         <option key={election.id} value={election.id}>
                           {election.title}
                         </option>
@@ -134,7 +134,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                     >
                       <option value="">Select a position</option>
-                      {filteredPositions.map((position) => (
+                      {filteredPositions?.map((position) => (
                         <option key={position.id} value={position.title}>
                           {position.title}
                         </option>

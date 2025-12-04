@@ -16,7 +16,8 @@ export const getCandidates = async () => {
     headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch candidates");
-  return response.json();
+  const json = await response.json();
+  return json.data || [];
 };
 
 export const getCandidate = async (id: string) => {

@@ -3,52 +3,30 @@ import { useElections } from "@/hooks/useElections";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreateElectionDialog } from "@/components/CreateElectionDialog";
-import { RegisterVoterDialog } from "@/components/RegisterVoterDialog";
-import { CreateCandidateDialog } from "@/components/CreateCandidateDialog";
-import { CreatePartyDialog } from "@/components/CreatePartyDialog";
+import { CreateElectionDialog } from "@/components/election/CreateElectionDialog";
+import { RegisterVoterDialog } from "@/components/voter/RegisterVoterDialog";
+import { CreateCandidateDialog } from "@/components/candidate/CreateCandidateDialog";
+import { CreatePartyDialog } from "@/components/party/CreatePartyDialog";
 import { Users, Vote, UserPlus, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { format } from "date-fns";
 
-import { useParties } from "@/hooks/useParties";
-import { useCandidates } from "@/hooks/useCandidates";
-import { DUMMY_ELECTIONS, DUMMY_PARTIES, DUMMY_CANDIDATES } from "@/constants/dummyData";
-
 export default function Overview() {
   const { data: elections } = useElections();
   const { data: stats } = useDashboardStats();
-  const { data: parties } = useParties();
-  const { data: candidates } = useCandidates();
 
-  const displayElections = elections || DUMMY_ELECTIONS;
-  const displayParties = parties || DUMMY_PARTIES;
-  const displayCandidates = candidates || DUMMY_CANDIDATES;
+  const displayElections = elections;
 
   // Sort elections by start date descending to show most recent first
   const recentElections = displayElections
     ?.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
     .slice(0, 3) || [];
 
-  const totalElections = displayElections?.length || 0;
-  const activeElections = displayElections?.filter(e => e.status === "Active").length || 0;
-  const totalParties = displayParties?.length || 0;
-  const totalCandidates = displayCandidates?.length || 0;
-  // Mock total votes for now as we don't have an endpoint
-  const totalVotes = 12450;
-
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold">Overview</h1>
 
-      <Stats
-        stats={stats}
-        totalElections={totalElections}
-        activeElections={activeElections}
-        totalParties={totalParties}
-        totalCandidates={totalCandidates}
-        totalVotes={totalVotes}
-      />
+      <Stats stats={stats} />
 
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-7">
         <Card className="md:col-span-4">

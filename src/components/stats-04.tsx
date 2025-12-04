@@ -11,14 +11,7 @@ interface StatsProps {
   totalVotes?: number;
 }
 
-export default function Stats({
-  stats,
-  totalElections = 0,
-  activeElections = 0,
-  totalParties = 0,
-  totalCandidates = 0,
-  totalVotes = 0
-}: StatsProps) {
+export default function Stats({ stats, }: StatsProps) {
   const data = [
     {
       name: "Total Voters",
@@ -38,35 +31,35 @@ export default function Stats({
       icon: UserX,
       color: "text-red-500",
     },
-     
-    
+
+
     {
       name: "Total Elections",
-      stat: totalElections,
+      stat: stats?.total_elections ?? 0,
       icon: Vote,
       color: "text-indigo-500",
     },
     {
       name: "Active Elections",
-      stat: activeElections,
+      stat: stats?.active_elections ?? 0,
       icon: Shield,
       color: "text-emerald-500",
     },
     {
       name: "Total Parties",
-      stat: totalParties,
+      stat: stats?.total_parties ?? 0,
       icon: Flag,
       color: "text-pink-500",
     },
     {
       name: "Total Candidates",
-      stat: totalCandidates,
+      stat: stats?.total_candidates ?? 0,
       icon: UserPlus,
       color: "text-cyan-500",
     },
     {
       name: "Total Votes Casted",
-      stat: totalVotes,
+      stat: stats?.total_votes ?? 0,
       icon: CheckCircle,
       color: "text-yellow-500",
     },

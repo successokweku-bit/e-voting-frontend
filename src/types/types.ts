@@ -68,6 +68,7 @@ export interface Position {
   title: string;
   description: string;
   election_id: string;
+  election_title?: string;
 }
 
 export interface State {
@@ -81,4 +82,9 @@ export interface DashboardStats {
   inactive_users: number;
   admin_users: number;
   regular_users: number;
+  total_votes: number;
+  total_elections: number;
+  total_candidates: number;
+  total_parties: number;
+  active_elections: number;
 }

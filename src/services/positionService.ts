@@ -2,7 +2,7 @@ import { API_URL, getAuthHeaders } from "./apiUtils";
 import type { Position } from "../types/types";
 
 export const createPosition = async (data: Omit<Position, "id">) => {
-  const response = await fetch(`${API_URL}/api/positions`, {
+  const response = await fetch(`${API_URL}/admin/positions`, {
     method: "POST",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -12,15 +12,16 @@ export const createPosition = async (data: Omit<Position, "id">) => {
 };
 
 export const getPositions = async () => {
-  const response = await fetch(`${API_URL}/api/positions`, {
+  const response = await fetch(`${API_URL}/admin/positions`, {
     headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch positions");
-  return response.json();
+  const json = await response.json();
+  return json.data || [];
 };
 
 export const getPosition = async (id: string) => {
-  const response = await fetch(`${API_URL}/api/positions/${id}`, {
+  const response = await fetch(`${API_URL}/admin/positions/${id}`, {
     headers: getAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch position");
@@ -28,7 +29,7 @@ export const getPosition = async (id: string) => {
 };
 
 export const updatePosition = async (id: string, data: Partial<Position>) => {
-  const response = await fetch(`${API_URL}/api/positions/${id}`, {
+  const response = await fetch(`${API_URL}/admin/positions/${id}`, {
     method: "PUT",
     headers: getAuthHeaders(),
     body: JSON.stringify(data),
@@ -43,7 +44,7 @@ export const updatePosition = async (id: string, data: Partial<Position>) => {
 };
 
 export const deletePosition = async (id: string) => {
-  const response = await fetch(`${API_URL}/api/positions/${id}`, {
+  const response = await fetch(`${API_URL}/admin/positions/${id}`, {
     method: "DELETE",
     headers: getAuthHeaders(),
   });

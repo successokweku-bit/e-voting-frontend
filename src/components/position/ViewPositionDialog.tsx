@@ -41,7 +41,7 @@ export function ViewPositionDialog({ positionId, open, onOpenChange }: ViewPosit
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Election ID</label>
-                            <p>{position.election_id || "N/A"}</p>
+                            <p>{position.election_title || "N/A"}</p>
                         </div>
                     </div>
                 ) : (
