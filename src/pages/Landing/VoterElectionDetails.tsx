@@ -51,7 +51,7 @@ const DUMMY_ELECTION = {
 export default function VoterElectionDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { data: electionData, isLoading } = useElection(id || "");
+  const { data: electionData, isLoading } = useElection(Number(id) || 0);
 
   const election = electionData || DUMMY_ELECTION;
 

@@ -38,7 +38,7 @@ import { DUMMY_ELECTIONS } from "@/constants/dummyData";
 export default function ElectionDetails() {
     const { id } = useParams<{ id: string }>();
     const navigate = useNavigate();
-    const { data: electionData, isLoading } = useElection(id || "");
+    const { data: electionData, isLoading } = useElection(Number(id) || 0);
 
     const election = electionData || DUMMY_ELECTIONS.find(e => e.election_id.toString() === id);
 

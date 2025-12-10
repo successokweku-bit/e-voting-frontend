@@ -9,7 +9,6 @@ import { CreateCandidateDialog } from "@/components/candidate/CreateCandidateDia
 import { CreatePartyDialog } from "@/components/party/CreatePartyDialog";
 import { Users, Vote, UserPlus, Flag } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
-import { format } from "date-fns";
 
 export default function Overview() {
   const { data: elections } = useElections();
