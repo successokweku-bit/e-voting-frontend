@@ -1,4 +1,4 @@
-import { useElections } from "@/hooks/useElections";
+import { useElections } from "@/hooks/election/useElections";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, ArrowRight, Clock, ShieldCheck, Vote } from "lucide-react";
@@ -8,25 +8,25 @@ import { UserNav } from "@/components/UserNav";
 
 const DUMMY_ELECTIONS = [
   {
-    id: "1",
+    election_id: 1,
     title: "2023 Nigerian General Elections",
-    status: "Active",
-    startDate: "Feb 25, 2023",
-    endDate: "Feb 26, 2023",
+    is_active: true,
+    start_date: "Feb 25, 2023",
+    end_date: "Feb 26, 2023",
   },
   {
-    id: "2",
+    election_id: 2,
     title: "2023 Gubernatorial Elections",
-    status: "Upcoming",
-    startDate: "Mar 11, 2023",
-    endDate: "Mar 12, 2023",
+    is_active: false,
+    start_date: "Mar 11, 2023",
+    end_date: "Mar 12, 2023",
   },
   {
-    id: "3",
+    election_id: 3,
     title: "FCT Area Council Elections",
-    status: "Upcoming",
-    startDate: "May 20, 2023",
-    endDate: "May 20, 2023",
+    is_active: false,
+    start_date: "May 20, 2023",
+    end_date: "May 20, 2023",
   }
 ] as any[];
 
@@ -36,8 +36,8 @@ export default function VoterLanding() {
 
   const displayElections = elections || DUMMY_ELECTIONS;
 
-  const activeElections = displayElections?.filter(e => e.status === "Active") || [];
-  const upcomingElections = displayElections?.filter(e => e.status === "Upcoming") || [];
+  const activeElections = displayElections?.filter(e => e.is_active) || [];
+  const upcomingElections = displayElections?.filter(e => !e.is_active) || [];
 
   // if (isLoading) {
   //     return <div className="p-10 container mx-auto">Loading elections...</div>;
@@ -105,7 +105,7 @@ export default function VoterLanding() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {activeElections.length > 0 ? (
               activeElections.map((election) => (
-                <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+                <Card key={election.election_id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="secondary" className="bg-[#0F3D3E] text-white hover:bg-[#0F3D3E]/90">
@@ -127,7 +127,7 @@ export default function VoterLanding() {
                       </div>
                       <div>
                         <p className="font-medium text-slate-900">Election Period</p>
-                        <p className="text-slate-500">{election.startDate} - {election.endDate}</p>
+                        <p className="text-slate-500">{election.start_date} - {election.end_date}</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3 text-sm text-slate-600">
@@ -143,7 +143,7 @@ export default function VoterLanding() {
                   <CardFooter className="pt-2">
                     <Button
                       className="w-full bg-[#0F4C4F] hover:bg-[#0F4C4F]/90 text-white"
-                      onClick={() => navigate(`/vote/elections/${election.id}`)}
+                      onClick={() => navigate(`/vote/elections/${election.election_id}`)}
                     >
                       Vote Now <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -172,7 +172,7 @@ export default function VoterLanding() {
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {upcomingElections.length > 0 ? (
               upcomingElections.map((election) => (
-                <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow opacity-90">
+                <Card key={election.election_id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow opacity-90">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
@@ -183,7 +183,7 @@ export default function VoterLanding() {
                       {election.title}
                     </CardTitle>
                     <p className="text-muted-foreground mt-2 text-sm">
-                      Starts on {election.startDate}
+                      Starts on {election.start_date}
                     </p>
                   </CardHeader>
                   <CardContent className="flex-1 space-y-4">
@@ -193,7 +193,7 @@ export default function VoterLanding() {
                       </div>
                       <div>
                         <p className="font-medium text-slate-900">Election Period</p>
-                        <p className="text-slate-500">{election.startDate} - {election.endDate}</p>
+                        <p className="text-slate-500">{election.start_date} - {election.end_date}</p>
                       </div>
                     </div>
                   </CardContent>

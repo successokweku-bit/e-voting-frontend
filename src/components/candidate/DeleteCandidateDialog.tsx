@@ -7,10 +7,10 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteCandidate } from "@/hooks/useDeleteCandidate";
+import { useDeleteCandidate } from "@/hooks/candidates/useDeleteCandidate";
 
 interface DeleteCandidateDialogProps {
-    candidateId: string;
+    candidateId: number;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }

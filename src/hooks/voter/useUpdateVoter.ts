@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateVoter } from "../services/services";
-import { type RegisterCredentials } from "../types/types";
+import { updateVoter } from "../../services/services";
+import { type RegisterCredentials } from "../../types/types";
 import { toast } from "sonner";
 
 export const useUpdateVoter = () => {

@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { partySchema } from "@/schemas/schemas";
-import { useUpdateParty } from "@/hooks/useUpdateParty";
+import { useUpdateParty } from "@/hooks/party/useUpdateParty";
 import { type Party } from "@/types/types";
 
 interface EditPartyDialogProps {
@@ -36,11 +36,12 @@ export function EditPartyDialog({ party, open, onOpenChange }: EditPartyDialogPr
                     </DialogDescription>
                 </DialogHeader>
                 <Formik
+                    enableReinitialize
                     initialValues={{
-                        name: party.name,
-                        acronym: party.acronym,
-                        founded_date: party.founded_date,
-                        description: party.description,
+                        name: party.name || "",
+                        acronym: party.acronym || "",
+                        founded_date: party.founded_date ? party.founded_date.split("T")[0] : "",
+                        description: party.description || "",
                     }}
                     validationSchema={partySchema}
                     onSubmit={(values, { resetForm }) => {

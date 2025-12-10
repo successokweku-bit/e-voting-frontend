@@ -5,7 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useParty } from "@/hooks/useParty";
+import { useParty } from "@/hooks/party/useParty";
 
 interface ViewPartyDialogProps {
     partyId: number;

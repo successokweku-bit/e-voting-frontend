@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeletePosition } from "@/hooks/useDeletePosition";
+import { useDeletePosition } from "@/hooks/position/useDeletePosition";
 
 interface DeletePositionDialogProps {
     positionId: string;

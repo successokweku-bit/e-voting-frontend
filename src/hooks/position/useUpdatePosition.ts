@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updatePosition } from "../services/services";
-import { type Position } from "../types/types";
+import { updatePosition } from "../../services/services";
+import { type Position } from "../../types/types";
 import { toast } from "sonner";
 
 export const useUpdatePosition = () => {

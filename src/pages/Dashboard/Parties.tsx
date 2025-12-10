@@ -13,7 +13,7 @@ import {
 import { CreatePartyDialog } from "@/components/party/CreatePartyDialog"
 import { EditPartyDialog } from "@/components/party/EditPartyDialog"
 import { DeletePartyDialog } from "@/components/party/DeletePartyDialog"
-import { useParties } from "@/hooks/useParties"
+import { useParties } from "@/hooks/party/useParties"
 
 import { ViewPartyDialog } from "@/components/party/ViewPartyDialog"
 import { Eye } from "lucide-react"

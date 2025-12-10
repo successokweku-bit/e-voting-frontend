@@ -5,7 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { usePosition } from "@/hooks/usePosition";
+import { usePosition } from "@/hooks/position/usePosition";
 
 interface ViewPositionDialogProps {
     positionId: string;

@@ -5,24 +5,21 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useCandidate } from "@/hooks/useCandidate";
-import { useElections } from "@/hooks/useElections";
+import { useCandidate } from "@/hooks/candidates/useCandidate";
 
 interface ViewCandidateDialogProps {
-    candidateId: string;
+    candidateId: number;
     open: boolean;
     onOpenChange: (open: boolean) => void;
 }
 
 export function ViewCandidateDialog({ candidateId, open, onOpenChange }: ViewCandidateDialogProps) {
     const { data: candidate, isLoading, error } = useCandidate(candidateId, open);
-    const { data: elections } = useElections();
 
-    const electionTitle = elections?.find((e) => e.id === candidate?.election_id)?.title || candidate?.election_id || "N/A";
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-xl">
                 <DialogHeader>
                     <DialogTitle>Candidate Details</DialogTitle>
                     <DialogDescription>
@@ -34,22 +31,45 @@ export function ViewCandidateDialog({ candidateId, open, onOpenChange }: ViewCan
                 ) : error ? (
                     <div className="text-red-500">Failed to load candidate details.</div>
                 ) : candidate ? (
-                    <div className="grid gap-4 py-4">
-                        <div>
+                    <div className="grid grid-cols-2 gap-4 py-4">
+                        <div className="col-span-2">
                             <label className="text-sm font-medium text-gray-500">Name</label>
-                            <p className="text-lg font-semibold">{candidate.name || "N/A"}</p>
+                            <p className="text-lg capitalize">{candidate?.user_name || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Party</label>
-                            <p>{candidate.party || "N/A"}</p>
+                            <p className="capitalize">{candidate?.party_name || "N/A"}</p>
+                        </div>
+                        <div>
+                            <label className="text-sm font-medium text-gray-500">Party Acronym</label>
+                            <p className="uppercase">{candidate?.party_acronym || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Position</label>
-                            <p>{candidate.position || "N/A"}</p>
+                            <p className="capitalize">{candidate?.position_title || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Election</label>
-                            <p>{electionTitle}</p>
+                            <p className="capitalize">{candidate?.election?.election_title || "N/A"}</p>
+                        </div>
+                        <div className="col-span-2">
+                            <label className="text-sm font-medium text-gray-500">Bio</label>
+                            <p>{candidate?.bio || "N/A"}</p>
+                        </div>
+                        <div className="col-span-2">
+                            <label className="text-sm font-medium text-gray-500">Manifesto</label>
+                            {candidate?.manifestos && candidate?.manifestos.length > 0 ? (
+                                <div className="mt-2 grid gap-2">
+                                    {candidate?.manifestos.map((item: { title: string; description: string }, index: number) => (
+                                        <div key={index} className="rounded-md border p-3 bg-muted/50">
+                                            <div className="font-semibold text-sm">{item?.title}</div>
+                                            <div className="text-sm text-muted-foreground mt-1">{item.description}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <p className="text-sm">N/A</p>
+                            )}
                         </div>
                     </div>
                 ) : (

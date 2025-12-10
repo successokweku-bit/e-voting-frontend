@@ -5,7 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useVoter } from "@/hooks/useVoter";
+import { useVoter } from "@/hooks/voter/useVoter";
 
 interface ViewVoterDialogProps {
     voterId: number | string;

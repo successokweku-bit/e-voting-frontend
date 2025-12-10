@@ -5,7 +5,7 @@ import {
     DialogHeader,
     DialogTitle,
 } from "@/components/ui/dialog";
-import { useElection } from "@/hooks/useElection";
+import { useElection } from "@/hooks/election/useElection";
 
 interface ViewElectionDialogProps {
     electionId: string;
@@ -37,15 +37,15 @@ export function ViewElectionDialog({ electionId, open, onOpenChange }: ViewElect
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Start Date</label>
-                            <p>{election.startDate || "N/A"}</p>
+                            <p>{election.start_date || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">End Date</label>
-                            <p>{election.endDate || "N/A"}</p>
+                            <p>{election.end_date || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Status</label>
-                            <p>{election.status || "N/A"}</p>
+                            <p>{election.is_active ? "Active" : "Inactive"}</p>
                         </div>
                     </div>
                 ) : (

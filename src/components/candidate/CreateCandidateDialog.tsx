@@ -13,13 +13,13 @@ import {
   FieldGroup,
   FieldLabel,
 } from "@/components/ui/field";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FieldArray } from "formik";
 import { candidateSchema } from "@/schemas/schemas";
-import { useCreateCandidate } from "@/hooks/useCreateCandidate";
-import { useElections } from "@/hooks/useElections";
-import { usePositions } from "@/hooks/usePositions";
-import { useVoters } from "@/hooks/useVoters";
-import { useParties } from "@/hooks/useParties";
+import { useElections } from "@/hooks/election/useElections";
+import { usePositions } from "@/hooks/position/usePositions";
+import { useVoters } from "@/hooks/voter/useVoters";
+import { useParties } from "@/hooks/party/useParties";
+import { useCreateCandidate } from "@/hooks/candidates/useCreateCandidate";
 
 export function CreateCandidateDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -34,7 +34,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>{children}</DialogTrigger>
-      <DialogContent className="sm:max-w-lg">
+      <DialogContent className="sm:max-w-2xl">
         <DialogHeader>
           <DialogTitle>Create Candidate</DialogTitle>
           <DialogDescription>
@@ -47,11 +47,15 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
             party_id: "",
             election_id: "",
             position_id: "",
+            bio: "",
+            manifestos: [{ title: "", description: "" }],
           }}
           validationSchema={candidateSchema}
           onSubmit={(values, { resetForm }) => {
+            const { user_id, party_id, election_id, position_id, bio, manifestos } = values;
+
             mutate(
-              values,
+              { user_id: Number(user_id), party_id: Number(party_id), election_id: Number(election_id), position_id: Number(position_id), bio, manifestos },
               {
                 onSuccess: () => {
                   setOpen(false);
@@ -63,12 +67,13 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
         >
           {({ values, setFieldValue }) => {
             const filteredPositions = positions.filter(
-              (position) => position.election_id === values.election_id
+              (position) =>
+                position.election_id == Number(values.election_id)
             );
 
             return (
-              <Form className="grid gap-4 py-4">
-                <FieldGroup>
+              <Form className="grid gap-4 py-4 overflow-y-auto  h-[calc(100vh-10rem)] px-1">
+                <FieldGroup className="grid grid-cols-2 gap-4 ">
                   <UIField>
                     <FieldLabel htmlFor="user_id">Candidate Name</FieldLabel>
                     <Field
@@ -79,12 +84,12 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                     >
                       <option value="">Select a voter</option>
                       {voters.map((voter) => (
-                        <option key={voter.id} value={voter.full_name}>
+                        <option key={voter.id} value={voter.id}>
                           {voter.full_name}
                         </option>
                       ))}
                     </Field>
-                    <ErrorMessage name="name" component="div" className="text-red-500 text-sm" />
+                    <ErrorMessage name="user_id" component="div" className="text-red-500 text-sm" />
                   </UIField>
                   <UIField>
                     <FieldLabel htmlFor="party_id">Party</FieldLabel>
@@ -96,7 +101,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                     >
                       <option value="">Select a party</option>
                       {parties.map((party) => (
-                        <option key={party.id} value={party.name}>
+                        <option key={party.id} value={party.id}>
                           {party.name}
                         </option>
                       ))}
@@ -112,12 +117,12 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                       className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
                       onChange={(e: React.ChangeEvent<HTMLSelectElement>) => {
                         setFieldValue("election_id", e.target.value);
-                        setFieldValue("position", "");
+                        setFieldValue("position_id", "");
                       }}
                     >
                       <option value="">Select an election</option>
                       {elections?.map((election) => (
-                        <option key={election.id} value={election.id}>
+                        <option key={election.election_id} value={election.election_id}>
                           {election.title}
                         </option>
                       ))}
@@ -135,13 +140,87 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                     >
                       <option value="">Select a position</option>
                       {filteredPositions?.map((position) => (
-                        <option key={position.id} value={position.title}>
+                        <option key={position.position_id} value={position.position_id}>
                           {position.title}
                         </option>
                       ))}
                     </Field>
                     <ErrorMessage name="position_id" component="div" className="text-red-500 text-sm" />
                   </UIField>
+                  <UIField className="col-span-2">
+                    <FieldLabel htmlFor="bio">Bio</FieldLabel>
+                    <Field
+                      name="bio"
+                      id="bio"
+                      as="textarea"
+                      placeholder="Candidate biography..."
+                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    />
+                    <ErrorMessage name="bio" component="div" className="text-red-500 text-sm" />
+                  </UIField>
+                  <div className="space-y-2 col-span-2">
+                    <FieldLabel>Manifesto Points</FieldLabel>
+                    <FieldArray name="manifestos">
+                      {({ push, remove }) => (
+                        <div className="space-y-4">
+                          {values.manifestos && values.manifestos.map((_, index) => (
+                            <div key={index} className="flex gap-2 items-start p-4 border rounded-lg bg-slate-50 relative group">
+                              <div className="flex-1 space-y-3">
+                                <div>
+                                  <FieldLabel className="text-xs text-muted-foreground mb-1">Title</FieldLabel>
+                                  <Field
+                                    name={`manifestos.${index}.title`}
+                                    placeholder="e.g. Education Reform"
+                                    className="flex h-9 w-full rounded-md border border-input bg-background px-3 py-1 text-sm  transition-colors file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
+                                  />
+                                  <ErrorMessage name={`manifestos.${index}.title`} component="div" className="text-red-500 text-xs mt-1" />
+                                </div>
+                                <div>
+                                  <FieldLabel className="text-xs text-muted-foreground mb-1">Description</FieldLabel>
+                                  <Field
+                                    name={`manifestos.${index}.description`}
+                                    as="textarea"
+                                    rows={2}
+                                    placeholder="Explain your policy..."
+                                    className="flex w-full rounded-md border border-input bg-background px-3 py-2 text-sm  placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50 resize-none"
+                                  />
+                                  <ErrorMessage name={`manifestos.${index}.description`} component="div" className="text-red-500 text-xs mt-1" />
+                                </div>
+                              </div>
+
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="icon"
+                                className="h-8 w-8 text-muted-foreground hover:text-destructive absolute top-2 right-2"
+                                onClick={() => remove(index)}
+                                disabled={values.manifestos && values.manifestos.length === 1 && index === 0}
+                              >
+                                <span className="sr-only">Remove</span>
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="h-4 w-4"><path d="M18 6 6 18" /><path d="m6 6 12 12" /></svg>
+                              </Button>
+                            </div>
+                          ))}
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="mt-2 w-full border-dashed border-2 hover:border-solid hover:bg-slate-50"
+                            onClick={() => push({ title: "", description: "" })}
+                          >
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="mr-2 h-4 w-4"><path d="M5 12h14" /><path d="M12 5v14" /></svg>
+                            Add Manifesto Point
+                          </Button>
+                        </div>
+                      )}
+                    </FieldArray>
+                    <ErrorMessage
+                      name="manifestos"
+                      render={(msg) => (typeof msg === "string" ? <div className="text-red-500 text-sm">{msg}</div> : null)}
+                    />
+                  </div>
+
+
                 </FieldGroup>
                 <div className="flex justify-end mt-4">
                   <Button type="submit" disabled={isPending}>

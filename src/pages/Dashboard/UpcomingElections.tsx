@@ -2,7 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown } from "lucide-react"
-import { useElections } from "@/hooks/useElections"
+import { useElections } from "@/hooks/election/useElections"
 import { DUMMY_ELECTIONS } from "@/constants/dummyData"
 import { type Election } from "@/types/types"
 

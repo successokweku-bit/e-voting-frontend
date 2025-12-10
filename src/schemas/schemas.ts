@@ -66,19 +66,23 @@ export const candidateSchema = Yup.object().shape({
   party_id: Yup.string().required("Party is required"),
   position_id: Yup.string().required("Position is required"),
   election_id: Yup.string().required("Election is required"),
-  // Optional fields for UI convenience, stripped before sending if needed, 
-  // or we assume the UI handles the mapping. 
-  // Actually, for the Edit form to work with the current schema, we need to ensure 
-  // we are validating the IDs.
+  bio: Yup.string().optional(),
+  manifestos: Yup.array().of(
+    Yup.object().shape({
+      title: Yup.string().required("Title is required"),
+      description: Yup.string().required("Description is required"),
+    })
+  ).optional(),
 });
 
 export const electionSchema = Yup.object().shape({
   title: Yup.string().required("Title is required"),
-  startDate: Yup.string().required("Start date is required"),
-  endDate: Yup.string().required("End date is required"),
-  status: Yup.string()
-    .oneOf(["Upcoming", "Active", "Completed"], "Invalid status")
-    .required("Status is required"),
+  description: Yup.string().optional().nullable(),
+  election_type: Yup.string().required("Election type is required"),
+  state: Yup.string().optional().nullable(),
+  is_active: Yup.boolean().optional(),
+  start_date: Yup.string().optional().nullable(),
+  end_date: Yup.string().optional().nullable(),
 });
 
 export const positionSchema = Yup.object().shape({

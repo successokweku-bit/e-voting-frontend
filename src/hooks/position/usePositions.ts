@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import { getPositions } from "../services/services";
-import { type Position } from "../types/types";
+import { getPositions } from "../../services/services";
+import { type Position } from "../../types/types";
 
 export const usePositions = () => {
     return useQuery<Position[]>({

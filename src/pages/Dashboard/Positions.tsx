@@ -14,8 +14,8 @@ import { CreatePositionDialog } from "@/components/position/CreatePositionDialog
 import { EditPositionDialog } from "@/components/position/EditPositionDialog"
 import { DeletePositionDialog } from "@/components/position/DeletePositionDialog"
 import { ViewPositionDialog } from "@/components/position/ViewPositionDialog"
-import { usePositions } from "@/hooks/usePositions"
- 
+import { usePositions } from "@/hooks/position/usePositions"
+
 const PositionActions = ({ position }: { position: Position }) => {
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
@@ -47,7 +47,7 @@ const PositionActions = ({ position }: { position: Position }) => {
       </DropdownMenu>
 
       <ViewPositionDialog
-        positionId={position.id}
+        positionId={position.position_id.toString()}
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
       />
@@ -57,7 +57,7 @@ const PositionActions = ({ position }: { position: Position }) => {
         onOpenChange={setShowEditDialog}
       />
       <DeletePositionDialog
-        positionId={position.id}
+        positionId={position.position_id.toString()}
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />
@@ -103,7 +103,7 @@ export default function Positions() {
   const { data: positions, isLoading } = usePositions()
 
   if (isLoading) {
-      return <div>Loading...</div>
+    return <div>Loading...</div>
   }
 
   const data = positions || [];

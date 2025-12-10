@@ -1,4 +1,4 @@
-import { useElections } from "@/hooks/useElections";
+import { useElections } from "@/hooks/election/useElections";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Calendar, Users, ArrowRight } from "lucide-react";
@@ -13,7 +13,7 @@ export default function ActiveElections() {
 
   const displayElections = elections || DUMMY_ELECTIONS;
 
-  const activeElections = displayElections?.filter(e => e.status === "Active") || [];
+  const activeElections = displayElections?.filter(e => e.is_active) || [];
 
   if (isLoading) {
     return <div className="p-10">Loading elections...</div>;
@@ -33,7 +33,7 @@ export default function ActiveElections() {
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {activeElections.length > 0 ? (
           activeElections.map((election) => (
-            <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            <Card key={election.election_id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
               <CardHeader className="pb-4">
                 <div className="flex justify-between items-start mb-2">
                   <Badge variant="secondary" className="bg-[#0F3D3E] text-white hover:bg-[#0F3D3E]/90">
@@ -55,7 +55,7 @@ export default function ActiveElections() {
                   </div>
                   <div>
                     <p className="font-medium text-slate-900">Election Period</p>
-                    <p className="text-slate-500">{election.startDate} - {election.endDate}</p>
+                    <p className="text-slate-500">{election.start_date} - {election.end_date}</p>
                   </div>
                 </div>
                 <div className="flex items-start space-x-3 text-sm text-slate-600">
@@ -71,7 +71,7 @@ export default function ActiveElections() {
               <CardFooter className="pt-2">
                 <Button
                   className="w-full bg-[#0F4C4F] hover:bg-[#0F4C4F]/90 text-white"
-                  onClick={() => navigate(`/elections/${election.id}`)}
+                  onClick={() => navigate(`/elections/${election.election_id}`)}
                 >
                   Vote Now <ArrowRight className="ml-2 h-4 w-4" />
                 </Button>

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useCandidates } from "@/hooks/useCandidates";
+import { useCandidates } from "@/hooks/candidates/useCandidates";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle2, CheckSquare, Check } from "lucide-react";
@@ -230,13 +230,13 @@ export default function VoterPositionCandidates() {
         </div>
 
         {positionCandidates.length > 0 ? (
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6 md:grid-cols-3">
             {positionCandidates.map((candidate) => (
               <Card
                 key={candidate.id}
                 className={`relative cursor-pointer transition-all duration-200 ${selectedCandidateId === candidate.id
-                    ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
-                    : 'border-slate-200 hover:border-slate-300'
+                  ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
+                  : 'border-slate-200 hover:border-slate-300'
                   }`}
                 onClick={() => handleSelectCandidate(candidate.id)}
               >
@@ -253,8 +253,8 @@ export default function VoterPositionCandidates() {
                     </div>
                     <div
                       className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedCandidateId === candidate.id
-                          ? 'border-[#134E4A] bg-[#134E4A]'
-                          : 'border-slate-300'
+                        ? 'border-[#134E4A] bg-[#134E4A]'
+                        : 'border-slate-300'
                         }`}
                     >
                       {selectedCandidateId === candidate.id && (
@@ -282,8 +282,8 @@ export default function VoterPositionCandidates() {
 
                   <Button
                     className={`w-full mt-4 ${selectedCandidateId === candidate.id
-                        ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
-                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
+                      ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
+                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                       }`}
                     onClick={(e) => {
                       e.stopPropagation();

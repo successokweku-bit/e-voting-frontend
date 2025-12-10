@@ -14,8 +14,9 @@ import {
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { positionSchema } from "@/schemas/schemas";
-import { useUpdatePosition } from "@/hooks/useUpdatePosition";
+import { useUpdatePosition } from "@/hooks/position/useUpdatePosition";
 import { type Position } from "@/types/types";
+import { useElections } from "@/hooks/election/useElections";
 
 interface EditPositionDialogProps {
     position: Position;
@@ -25,10 +26,11 @@ interface EditPositionDialogProps {
 
 export function EditPositionDialog({ position, open, onOpenChange }: EditPositionDialogProps) {
     const { mutate, isPending } = useUpdatePosition();
+    const { data: elections } = useElections();
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
-            <DialogContent className="sm:max-w-[425px]">
+            <DialogContent className="sm:max-w-lg">
                 <DialogHeader>
                     <DialogTitle>Edit Position</DialogTitle>
                     <DialogDescription>
@@ -36,15 +38,22 @@ export function EditPositionDialog({ position, open, onOpenChange }: EditPositio
                     </DialogDescription>
                 </DialogHeader>
                 <Formik
+                    enableReinitialize
                     initialValues={{
-                        title: position.title,
-                        description: position.description,
-                        election_id: position.election_id,
+                        title: position.title || "",
+                        description: position.description || "",
+                        election_id: String(position.election_id || ""),
                     }}
                     validationSchema={positionSchema}
                     onSubmit={(values, { resetForm }) => {
                         mutate(
-                            { id: position.id, data: values },
+                            {
+                                id: position.position_id.toString(),
+                                data: {
+                                    ...values,
+                                    election_id: Number(values.election_id)
+                                }
+                            },
                             {
                                 onSuccess: () => {
                                     onOpenChange(false);
@@ -68,8 +77,20 @@ export function EditPositionDialog({ position, open, onOpenChange }: EditPositio
                                     <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
                                 </UIField>
                                 <UIField>
-                                    <FieldLabel htmlFor="election_id">Election ID</FieldLabel>
-                                    <Field name="election_id" as={Input} id="election_id" type="number" />
+                                    <FieldLabel htmlFor="election_id">Election</FieldLabel>
+                                    <Field
+                                        name="election_id"
+                                        as="select"
+                                        id="election_id"
+                                        className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+                                    >
+                                        <option value="">Select an election</option>
+                                        {elections?.map((election) => (
+                                            <option key={election.election_id} value={election.election_id}>
+                                                {election.title}
+                                            </option>
+                                        ))}
+                                    </Field>
                                     <ErrorMessage name="election_id" component="div" className="text-red-500 text-sm" />
                                 </UIField>
                             </FieldGroup>

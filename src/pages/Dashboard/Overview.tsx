@@ -1,5 +1,5 @@
 import Stats from "@/components/stats-04";
-import { useElections } from "@/hooks/useElections";
+import { useElections } from "@/hooks/election/useElections";
 import { useDashboardStats } from "@/hooks/useDashboardStats";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -19,7 +19,7 @@ export default function Overview() {
 
   // Sort elections by start date descending to show most recent first
   const recentElections = displayElections
-    ?.sort((a, b) => new Date(b.startDate).getTime() - new Date(a.startDate).getTime())
+    ?.sort((a, b) => new Date(b.start_date).getTime() - new Date(a.start_date).getTime())
     .slice(0, 3) || [];
 
   return (
@@ -38,17 +38,17 @@ export default function Overview() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              {recentElections.length > 0 ? (
-                recentElections.map((election) => (
-                  <div key={election.id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
+              {recentElections?.length > 0 ? (
+                recentElections?.map((election) => (
+                  <div key={election?.election_id} className="flex items-center justify-between border-b pb-4 last:border-0 last:pb-0">
                     <div className="space-y-1">
-                      <p className="font-medium leading-none">{election.title}</p>
+                      <p className="font-medium leading-none">{election?.title}</p>
                       <p className="text-sm text-muted-foreground">
-                        {format(new Date(election.startDate), "MMM d, yyyy")} - {format(new Date(election.endDate), "MMM d, yyyy")}
+                        {/* {format(new Date(election?.start_date), "MMM d, yyyy")} - {format(new Date(election?.end_date), "MMM d, yyyy")} */}
                       </p>
                     </div>
-                    <Badge variant={election.status === "Active" ? "default" : "secondary"}>
-                      {election.status}
+                    <Badge variant={election?.is_active ? "default" : "secondary"}>
+                      {election?.is_active ? "Active" : "Inactive"}
                     </Badge>
                   </div>
                 ))

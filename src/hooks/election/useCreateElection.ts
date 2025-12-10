@@ -1,13 +1,13 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createElection } from "../services/services";
-import { type Election } from "../types/types";
+import { createElection } from "../../services/services";
+import { type Election } from "../../types/types";
 import { toast } from "sonner";
 
 export const useCreateElection = () => {
     const queryClient = useQueryClient();
 
     return useMutation({
-        mutationFn: (data: Omit<Election, "id">) => createElection(data),
+        mutationFn: (data: Omit<Election, "election_id" | "created_at" | "position_count">) => createElection(data),
         onSuccess: () => {
             toast.success("Election created successfully");
             queryClient.invalidateQueries({ queryKey: ["elections"] });

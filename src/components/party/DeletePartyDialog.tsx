@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteParty } from "@/hooks/useDeleteParty";
+import { useDeleteParty } from "@/hooks/party/useDeleteParty";
 
 interface DeletePartyDialogProps {
     partyId: number;

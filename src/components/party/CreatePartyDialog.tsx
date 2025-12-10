@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { partySchema } from "@/schemas/schemas";
-import { useCreateParty } from "@/hooks/useCreateParty";
+import { useCreateParty } from "@/hooks/party/useCreateParty";
 
 export function CreatePartyDialog({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);

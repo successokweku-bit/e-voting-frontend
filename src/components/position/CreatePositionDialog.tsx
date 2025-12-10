@@ -15,11 +15,11 @@ import {
     FieldLabel,
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import { useCreatePosition } from "@/hooks/useCreatePosition";
+import { useCreatePosition } from "@/hooks/position/useCreatePosition";
 import { positionSchema } from "@/schemas/schemas";
 
 
-import { useElections } from "@/hooks/useElections";
+import { useElections } from "@/hooks/election/useElections";
 
 export function CreatePositionDialog({ children, electionId }: { children: React.ReactNode; electionId?: string }) {
     const [open, setOpen] = useState(false);
@@ -40,11 +40,14 @@ export function CreatePositionDialog({ children, electionId }: { children: React
                     initialValues={{
                         title: "",
                         description: "",
-                        election_id: electionId ? String(electionId) : "",
+                        election_id:  "",
                     }}
                     validationSchema={positionSchema}
                     onSubmit={(values, { resetForm }) => {
-                        mutate(values, {
+                        mutate({
+                            ...values,
+                            election_id: Number(values.election_id)
+                        }, {
                             onSuccess: () => {
                                 setOpen(false);
                                 resetForm();
@@ -76,7 +79,7 @@ export function CreatePositionDialog({ children, electionId }: { children: React
                                         >
                                             <option value="">Select an election</option>
                                             {elections?.map((election) => (
-                                                <option key={election.id} value={election.id}>
+                                                <option key={election.election_id} value={election.election_id}>
                                                     {election.title}
                                                 </option>
                                             ))}

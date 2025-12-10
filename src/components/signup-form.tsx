@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input"
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerSchema } from "@/schemas/schemas";
 import { useNavigate } from "react-router-dom";
-import { useRegisterVoter } from "@/hooks/useRegisterVoter";
+import { useRegisterVoter } from "@/hooks/voter/useRegisterVoter";
 
 import { useStates } from "@/hooks/useStates";
 

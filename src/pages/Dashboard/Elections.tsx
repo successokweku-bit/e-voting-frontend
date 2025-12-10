@@ -13,7 +13,7 @@ import {
 import { CreateElectionDialog } from "@/components/election/CreateElectionDialog"
 import { EditElectionDialog } from "@/components/election/EditElectionDialog"
 import { DeleteElectionDialog } from "@/components/election/DeleteElectionDialog"
-import { useElections } from "@/hooks/useElections"
+import { useElections } from "@/hooks/election/useElections"
 
 import { ViewElectionDialog } from "@/components/election/ViewElectionDialog"
 import { Eye } from "lucide-react"
@@ -49,7 +49,7 @@ const ElectionActions = ({ election }: { election: Election }) => {
       </DropdownMenu>
 
       <ViewElectionDialog
-        electionId={election.id}
+        electionId={election.election_id.toString()}
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
       />
@@ -59,7 +59,7 @@ const ElectionActions = ({ election }: { election: Election }) => {
         onOpenChange={setShowEditDialog}
       />
       <DeleteElectionDialog
-        electionId={election.id}
+        electionId={election.election_id.toString()}
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />
@@ -88,16 +88,27 @@ const columns: ColumnDef<Election>[] = [
     },
   },
   {
-    accessorKey: "startDate",
+    accessorKey: "start_date",
     header: "Start Date",
+    cell: ({ row }) => {
+      const date = row.getValue("start_date") as string;
+      return date ? new Date(date).toLocaleDateString() : "";
+    }
   },
   {
-    accessorKey: "endDate",
+    accessorKey: "end_date",
     header: "End Date",
+    cell: ({ row }) => {
+      const date = row.getValue("end_date") as string;
+      return date ? new Date(date).toLocaleDateString() : "";
+    }
   },
   {
-    accessorKey: "status",
+    accessorKey: "is_active",
     header: "Status",
+    cell: ({ row }) => {
+      return row.getValue("is_active") ? "Active" : "Inactive";
+    }
   },
   {
     id: "actions",

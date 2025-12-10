@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteElection } from "../services/services";
+import { deleteElection } from "../../services/services";
 import { toast } from "sonner";
 
 export const useDeleteElection = () => {

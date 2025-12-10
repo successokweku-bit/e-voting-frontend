@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { updateUserSchema } from "@/schemas/schemas";
-import { useUpdateVoter } from "@/hooks/useUpdateVoter";
+import { useUpdateVoter } from "@/hooks/voter/useUpdateVoter";
 import { useStates } from "@/hooks/useStates";
 import { type User } from "@/types/types";
 

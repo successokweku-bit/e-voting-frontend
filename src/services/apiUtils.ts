@@ -1,5 +1,12 @@
 export const API_URL = import.meta.env.VITE_BASE_URL;
 
+export const getHeaders = () => {
+  const token = localStorage.getItem("token");
+
+  return {
+     ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
+};
 export const getAuthHeaders = () => {
   const token = localStorage.getItem("token");
 

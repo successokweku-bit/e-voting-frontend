@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { updateElection } from "../services/services";
-import { type Election } from "../types/types";
+import { updateElection } from "../../services/services";
+import { type Election } from "../../types/types";
 import { toast } from "sonner";
 
 export const useUpdateElection = () => {

@@ -7,7 +7,7 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { useDeleteElection } from "@/hooks/useDeleteElection";
+import { useDeleteElection } from "@/hooks/election/useDeleteElection";
 
 interface DeleteElectionDialogProps {
     electionId: string;

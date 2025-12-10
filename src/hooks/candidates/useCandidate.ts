@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCandidate } from "../services/services";
-import { type Candidate } from "../types/types";
+import { getCandidate } from "../../services/services";
+import { type Candidate } from "../../types/types";
 
-export const useCandidate = (id: string, enabled: boolean = true) => {
+export const useCandidate = (id: number, enabled: boolean = true) => {
     return useQuery<Candidate>({
         queryKey: ["candidate", id],
         queryFn: () => getCandidate(id),

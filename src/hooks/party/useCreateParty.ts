@@ -1,6 +1,6 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createParty } from "../services/services";
-import { type Party } from "../types/types";
+import { createParty } from "../../services/services";
+import { type Party } from "../../types/types";
 import { toast } from "sonner";
 
 export const useCreateParty = () => {

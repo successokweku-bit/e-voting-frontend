@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useElection } from "@/hooks/useElection";
+import { useElection } from "@/hooks/election/useElection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Users, ChevronRight, CheckSquare } from "lucide-react";
@@ -41,11 +41,11 @@ const MOCK_POSITIONS = [
 ];
 
 const DUMMY_ELECTION = {
-  id: "1",
+  election_id: 1,
   title: "2023 Nigerian General Elections",
-  status: "Active",
-  startDate: "Feb 25, 2023",
-  endDate: "Feb 26, 2023",
+  is_active: true,
+  start_date: "Feb 25, 2023",
+  end_date: "Feb 26, 2023",
 } as never;
 
 export default function VoterElectionDetails() {
@@ -83,7 +83,7 @@ export default function VoterElectionDetails() {
 
           <div className="flex items-center gap-4 mb-6">
             <Badge className="bg-[#10B981] hover:bg-[#059669] text-white border-none rounded-full px-3 py-1 text-sm font-medium">
-              {election.status === "Active" ? "Ongoing" : election.status}
+              {election.is_active ? "Ongoing" : "Inactive"}
             </Badge>
             <div className="flex items-center text-sm font-medium text-white/90">
               <span className="flex h-2 w-2 rounded-full bg-white mr-2 animate-pulse"></span>
@@ -103,7 +103,7 @@ export default function VoterElectionDetails() {
               </div>
               <div>
                 <p className="text-xs text-white/70 uppercase font-semibold tracking-wider mb-0.5">Election Period</p>
-                <p className="font-medium text-white text-base">{election.startDate} - {election.endDate}</p>
+                <p className="font-medium text-white text-base">{election.start_date} - {election.end_date}</p>
               </div>
             </div>
 
@@ -127,7 +127,7 @@ export default function VoterElectionDetails() {
           <p className="text-muted-foreground text-lg">Select a position to view candidates and cast your vote</p>
         </div>
 
-        <div className="grid gap-4 md:grid-cols-2">
+        <div className="grid gap-4 md:grid-cols-3">
           {MOCK_POSITIONS.map((position) => (
             <Card
               key={position.id}

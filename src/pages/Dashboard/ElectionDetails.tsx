@@ -1,5 +1,5 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useElection } from "@/hooks/useElection";
+import { useElection } from "@/hooks/election/useElection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Users, ChevronRight, CheckSquare } from "lucide-react";
@@ -40,7 +40,7 @@ export default function ElectionDetails() {
     const navigate = useNavigate();
     const { data: electionData, isLoading } = useElection(id || "");
 
-    const election = electionData || DUMMY_ELECTIONS.find(e => e.id === id);
+    const election = electionData || DUMMY_ELECTIONS.find(e => e.election_id.toString() === id);
 
     if (isLoading && !election) {
         return <div className="p-10">Loading election details...</div>;
@@ -66,7 +66,7 @@ export default function ElectionDetails() {
 
                     <div className="flex items-center gap-3 mb-4">
                         <Badge className="bg-green-500 hover:bg-green-600 text-white border-none">
-                            {election.status === "Active" ? "Ongoing" : election.status}
+                            {election.is_active ? "Ongoing" : "Inactive"}
                         </Badge>
                         <div className="flex items-center text-sm font-medium">
                             <span className="flex h-2 w-2 rounded-full bg-white mr-2"></span>
@@ -86,7 +86,7 @@ export default function ElectionDetails() {
                             </div>
                             <div>
                                 <p className="text-xs text-white/60 uppercase font-semibold tracking-wider">Election Period</p>
-                                <p className="font-medium">{election.startDate} - {election.endDate}</p>
+                                <p className="font-medium">{election.start_date} - {election.end_date}</p>
                             </div>
                         </div>
 

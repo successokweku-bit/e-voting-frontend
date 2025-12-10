@@ -13,9 +13,7 @@ import {
 import { CreateCandidateDialog } from "@/components/candidate/CreateCandidateDialog"
 import { EditCandidateDialog } from "@/components/candidate/EditCandidateDialog"
 import { DeleteCandidateDialog } from "@/components/candidate/DeleteCandidateDialog"
-import { useElections } from "@/hooks/useElections"
-import { useCandidates } from "@/hooks/useCandidates"
-
+ import { useCandidates } from "@/hooks/candidates/useCandidates"
 import { ViewCandidateDialog } from "@/components/candidate/ViewCandidateDialog"
 import { Eye } from "lucide-react"
 
@@ -50,7 +48,7 @@ const CandidateActions = ({ candidate }: { candidate: Candidate }) => {
       </DropdownMenu>
 
       <ViewCandidateDialog
-        candidateId={candidate.id}
+        candidateId={candidate.candidate_id}
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
       />
@@ -60,7 +58,7 @@ const CandidateActions = ({ candidate }: { candidate: Candidate }) => {
         onOpenChange={setShowEditDialog}
       />
       <DeleteCandidateDialog
-        candidateId={candidate.id}
+        candidateId={candidate.candidate_id}
         open={showDeleteDialog}
         onOpenChange={setShowDeleteDialog}
       />
@@ -68,12 +66,7 @@ const CandidateActions = ({ candidate }: { candidate: Candidate }) => {
   )
 }
 
-
-const ElectionCell = ({ electionId }: { electionId: string }) => {
-  const { data: elections } = useElections()
-  const election = elections?.find((e) => e.id === electionId)
-  return <div>{election?.title || electionId}</div>
-}
+ 
 
 const columns: ColumnDef<Candidate>[] = [
   {
@@ -82,7 +75,7 @@ const columns: ColumnDef<Candidate>[] = [
     cell: ({ row }) => row.index + 1,
   },
   {
-    accessorKey: "name",
+    accessorKey: "user_name",
     header: ({ column }) => {
       return (
         <Button
@@ -96,18 +89,17 @@ const columns: ColumnDef<Candidate>[] = [
     },
   },
   {
-    accessorKey: "party",
+    accessorKey: "party_name",
     header: "Party",
   },
   {
-    accessorKey: "position",
+    accessorKey: "position_title",
     header: "Position",
   },
   {
-    accessorKey: "election_id",
+    accessorKey: "election.election_title",
     header: "Election",
-    cell: ({ row }) => <ElectionCell electionId={row.original.election_id} />,
-  },
+   },
   {
     id: "actions",
     cell: ({ row }) => <CandidateActions candidate={row.original} />,
@@ -115,21 +107,19 @@ const columns: ColumnDef<Candidate>[] = [
 ]
 
 
-import { DUMMY_CANDIDATES } from "@/constants/dummyData"
-
 export default function Candidates() {
-  const { data: candidates } = useCandidates()
+  const { data: candidates , isLoading } = useCandidates()
 
-  // if (isLoading) {
-  //   return <div className="container mx-auto md:px-10  py-10">Loading...</div>
-  // }
+  if (isLoading) {
+    return <div className="container mx-auto md:px-10  py-10">Loading...</div>
+  }
 
-  const data = candidates || DUMMY_CANDIDATES
+  const data = candidates || []
 
   return (
     <div className="container mx-auto md:px-10  py-10">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold  ">Candidates</h1>
+        <h1 className="text-2xl font-bold ">Candidates</h1>
         <CreateCandidateDialog>
           <Button>Create Candidate <CircleFadingPlus /></Button>
         </CreateCandidateDialog>

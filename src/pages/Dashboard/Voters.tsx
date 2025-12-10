@@ -13,7 +13,7 @@ import { type User } from "@/types/types"
 import { RegisterVoterDialog } from "@/components/voter/RegisterVoterDialog"
 import { EditVoterDialog } from "@/components/voter/EditVoterDialog"
 import { DeleteVoterDialog } from "@/components/voter/DeleteVoterDialog"
-import { useVoters } from "@/hooks/useVoters"
+import { useVoters } from "@/hooks/voter/useVoters"
 
 import { ViewVoterDialog } from "@/components/voter/ViewVoterDialog"
 import { Eye } from "lucide-react"

@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/field";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { registerSchema } from "@/schemas/schemas";
-import { useRegisterVoter } from "@/hooks/useRegisterVoter";
+import { useRegisterVoter } from "@/hooks/voter/useRegisterVoter";
 import { useStates } from "@/hooks/useStates";
 
 export function RegisterVoterDialog({ children }: { children: React.ReactNode }) {

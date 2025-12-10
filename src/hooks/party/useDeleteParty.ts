@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteParty } from "../services/services";
+import { deleteParty } from "../../services/services";
 import { toast } from "sonner";
 
 export const useDeleteParty = () => {

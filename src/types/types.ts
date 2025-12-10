@@ -44,31 +44,49 @@ export interface Party {
   created_at: string;
 }
 
+export interface ManifestoItem {
+  title: string;
+  description: string;
+}
+
 export interface Candidate {
-  id: string;
-  user_id: string;
-  party_id: string;
-  election_id: string;
-  position_id: string;
-  name?: string;
-  party?: string;
-  position?: string;
+  candidate_id: number;
+  user_id: number;
+  party_id: number;
+  election_id: number;
+  position_id: number;
+  bio: string;
+  manifestos: ManifestoItem[];
+  
+  user_name?: string;
+  user_email?: string;
+  party_name?: string;
+  party_acronym?: string;
+  position_title?: string;
+  election?: Election;
 }
 
 export interface Election {
-  id: string;
+  election_id: number;
   title: string;
-  status: "Upcoming" | "Active" | "Completed";
-  startDate: string;
-  endDate: string;
+  election_title?: string;
+  description: string | null;
+  election_type: string;
+  state: string;
+  is_active: boolean;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  position_count: number;
 }
 
 export interface Position {
-  id: string;
+  position_id: number;
   title: string;
   description: string;
-  election_id: string;
+  election_id: number;
   election_title?: string;
+  candidate_count?: number;
 }
 
 export interface State {
