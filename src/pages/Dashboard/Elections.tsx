@@ -49,7 +49,7 @@ const ElectionActions = ({ election }: { election: Election }) => {
       </DropdownMenu>
 
       <ViewElectionDialog
-        electionId={election.election_id.toString()}
+        electionId={election.election_id}
         open={showViewDialog}
         onOpenChange={setShowViewDialog}
       />
@@ -117,16 +117,15 @@ const columns: ColumnDef<Election>[] = [
 ]
 
 
-import { DUMMY_ELECTIONS } from "@/constants/dummyData"
-
+ 
 export default function Elections() {
-  const { data: elections } = useElections()
+  const { data: elections , isLoading} = useElections()
 
-  // if (isLoading) {
-  //   return <div className="container mx-auto md:px-10 py-10">Loading...</div>
-  // }
+  if (isLoading) {
+    return <div className="container mx-auto md:px-10 py-10">Loading...</div>
+  }
 
-  const data = elections || DUMMY_ELECTIONS
+  const data = elections || []
 
   return (
     <div className="container mx-auto md:px-10 py-10">

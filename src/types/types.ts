@@ -70,7 +70,7 @@ export interface Election {
   election_id: number;
   title: string;
   election_title?: string;
-  description: string | null;
+  description: string;
   election_type: string;
   state: string;
   is_active: boolean;

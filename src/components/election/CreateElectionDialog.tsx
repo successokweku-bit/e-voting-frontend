@@ -20,11 +20,9 @@ import { useCreateElection } from "@/hooks/election/useCreateElection";
 import { useStates } from "@/hooks/useStates";
 
 const ELECTION_TYPES = [
-  "Presidential",
-  "Gubernatorial",
-  "Senatorial",
-  "House of Representatives",
-  "Local Government",
+  "federal",
+  "state",
+  "local",
 ];
 
 export function CreateElectionDialog({ children }: { children: React.ReactNode }) {
