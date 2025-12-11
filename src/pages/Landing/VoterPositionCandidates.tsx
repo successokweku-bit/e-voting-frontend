@@ -66,6 +66,7 @@ export default function VoterPositionCandidates() {
         {
           electionId: Number(electionId),
           positionId: Number(positionId),
+          candidateId: candidate.id,
         },
         {
           onSuccess: () => {

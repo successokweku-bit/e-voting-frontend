@@ -103,11 +103,14 @@ export const deleteElection = async (id: string) => {
   return response.json();
 };
 
-export const voteSecure = async (electionId: number, positionId: number ) => {
+export const voteSecure = async (electionId: number, positionId: number, candidateId: number) => {
   const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
     method: "POST",
     headers: getAuthHeaders(),
-   });
+    body: JSON.stringify({ candidate_id: candidateId }),
+
+  });
+
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Failed to cast vote");
