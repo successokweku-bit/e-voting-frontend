@@ -1,14 +1,17 @@
 import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { Candidate } from "../types/types";
 
-export const createCandidate = async (data: Omit<Candidate, "candidate_id">) => {
+export const createCandidate = async (data: FormData) => {
 
   const response = await fetch(`${API_URL}/admin/candidates`, {
     method: "POST",
-    headers: getJsonAuthHeaders(),
-    body: JSON.stringify(data),
+    headers: getHeaders(),
+    body: data,
   });
-  if (!response.ok) throw new Error("Failed to create candidate");
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to create candidate");
+  }
   return response.json();
 };
 
@@ -23,6 +26,14 @@ export const getCandidates = async () => {
 
 export const getCandidate = async (id: number) => {
   const response = await fetch(`${API_URL}/admin/candidates/${id}`, {
+    headers: getJsonAuthHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to fetch candidate");
+  const json = await response.json();
+  return json.data;
+};
+export const getDashCandidates = async (electionId: number, positionId: number) => {
+  const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/candidates`, {
     headers: getJsonAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch candidate");
@@ -45,7 +56,10 @@ export const updateCandidate = async (id: number, data: Partial<Candidate>) => {
     headers: getHeaders(),
     body: formData,
   });
-  if (!response.ok) throw new Error("Failed to update candidate");
+  if (!response.ok) {
+    const errorData = await response.json().catch(() => ({}));
+    throw new Error(errorData.message || "Failed to update candidate");
+  }
   return response.json();
 };
 

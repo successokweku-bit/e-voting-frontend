@@ -4,6 +4,7 @@ import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, CircleFadingPlus, MoreVertical, Pencil, Trash } from "lucide-react"
 import { type Candidate } from "@/types/types"
+import { Spinner } from "@/components/ui/spinner"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,7 +14,7 @@ import {
 import { CreateCandidateDialog } from "@/components/candidate/CreateCandidateDialog"
 import { EditCandidateDialog } from "@/components/candidate/EditCandidateDialog"
 import { DeleteCandidateDialog } from "@/components/candidate/DeleteCandidateDialog"
- import { useCandidates } from "@/hooks/candidates/useCandidates"
+import { useCandidates } from "@/hooks/candidates/useCandidates"
 import { ViewCandidateDialog } from "@/components/candidate/ViewCandidateDialog"
 import { Eye } from "lucide-react"
 
@@ -66,7 +67,7 @@ const CandidateActions = ({ candidate }: { candidate: Candidate }) => {
   )
 }
 
- 
+
 
 const columns: ColumnDef<Candidate>[] = [
   {
@@ -99,7 +100,7 @@ const columns: ColumnDef<Candidate>[] = [
   {
     accessorKey: "election.election_title",
     header: "Election",
-   },
+  },
   {
     id: "actions",
     cell: ({ row }) => <CandidateActions candidate={row.original} />,
@@ -108,10 +109,14 @@ const columns: ColumnDef<Candidate>[] = [
 
 
 export default function Candidates() {
-  const { data: candidates , isLoading } = useCandidates()
+  const { data: candidates, isLoading } = useCandidates()
 
   if (isLoading) {
-    return <div className="container mx-auto md:px-10  py-10">Loading...</div>
+    return (
+      <div className="flex bg-slate-50 h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   const data = candidates || []

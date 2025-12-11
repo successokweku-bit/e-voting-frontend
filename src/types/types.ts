@@ -57,13 +57,43 @@ export interface Candidate {
   position_id: number;
   bio: string;
   manifestos: ManifestoItem[];
-  
+  profile_image_url?: string;
+
   user_name?: string;
   user_email?: string;
   party_name?: string;
   party_acronym?: string;
   position_title?: string;
   election?: Election;
+}
+
+export interface PublicParty {
+  id: number;
+  name: string;
+  description: string;
+  logo_url: string | null;
+}
+
+export interface PublicElection {
+  id: number;
+  title: string;
+  description: string;
+  election_type: string;
+  state: string;
+  start_date: string;
+  end_date: string;
+}
+
+export interface VoterCandidate {
+  id: number;
+  user_id: number;
+  name: string;
+  position_id: number;
+  bio: string;
+  manifestos: ManifestoItem[];
+  profile_image_url?: string;
+  party: PublicParty;
+  election: PublicElection;
 }
 
 export interface Election {
@@ -87,6 +117,28 @@ export interface Position {
   election_id: number;
   election_title?: string;
   candidate_count?: number;
+}
+
+export interface ElectionPosition {
+  id: number;
+  title: string;
+  description: string;
+  election_id: number;
+  candidates: Candidate[];
+}
+
+export interface ElectionDetails {
+  id: number;
+  title: string;
+  description: string;
+  election_type: string;
+  state: string;
+  is_active: boolean;
+  start_date: string;
+  end_date: string;
+  created_at: string;
+  positions: ElectionPosition[];
+  total_votes: number;
 }
 
 export interface State {

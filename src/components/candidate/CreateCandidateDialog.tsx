@@ -49,20 +49,28 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
             position_id: "",
             bio: "",
             manifestos: [{ title: "", description: "" }],
+            image: null as File | null,
           }}
           validationSchema={candidateSchema}
           onSubmit={(values, { resetForm }) => {
-            const { user_id, party_id, election_id, position_id, bio, manifestos } = values;
+            const formData = new FormData();
+            formData.append("user_id", values.user_id);
+            formData.append("party_id", values.party_id);
+            formData.append("election_id", values.election_id);
+            formData.append("position_id", values.position_id);
+            formData.append("bio", values.bio);
+            formData.append("manifestos", JSON.stringify(values.manifestos));
 
-            mutate(
-              { user_id: Number(user_id), party_id: Number(party_id), election_id: Number(election_id), position_id: Number(position_id), bio, manifestos },
-              {
-                onSuccess: () => {
-                  setOpen(false);
-                  resetForm();
-                },
-              }
-            );
+            if (values.image) {
+              formData.append("image", values.image);
+            }
+
+            mutate(formData, {
+              onSuccess: () => {
+                setOpen(false);
+                resetForm();
+              },
+            });
           }}
         >
           {({ values, setFieldValue }) => {
@@ -74,6 +82,33 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
             return (
               <Form className="grid gap-4 py-4 overflow-y-auto  h-[calc(100vh-10rem)] px-1">
                 <FieldGroup className="grid grid-cols-2 gap-4 ">
+                  <div className="col-span-2 flex justify-center mb-4">
+                    <div className="relative group cursor-pointer">
+                      <div className={`w-32 h-32 rounded-full border-2 border-dashed flex items-center justify-center overflow-hidden ${values.image ? 'border-primary' : 'border-slate-300'}`}>
+                        {values.image ? (
+                          <img
+                            src={URL.createObjectURL(values.image)}
+                            alt="Preview"
+                            className="w-full h-full object-cover"
+                          />
+                        ) : (
+                          <div className="text-center p-4">
+                            <div className="text-slate-400 text-xs">Upload Photo</div>
+                          </div>
+                        )}
+                        <input
+                          type="file"
+                          accept="image/*"
+                          className="absolute inset-0 opacity-0 cursor-pointer"
+                          onChange={(event) => {
+                            if (event.currentTarget.files && event.currentTarget.files[0]) {
+                              setFieldValue("image", event.currentTarget.files[0]);
+                            }
+                          }}
+                        />
+                      </div>
+                    </div>
+                  </div>
                   <UIField>
                     <FieldLabel htmlFor="user_id">Candidate Name</FieldLabel>
                     <Field

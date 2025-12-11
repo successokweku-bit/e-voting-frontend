@@ -1,47 +1,41 @@
-import { useElections } from "@/hooks/election/useElections";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Calendar, Users, ArrowRight, Clock, ShieldCheck, Vote } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
+import { Calendar, Users, ArrowRight, ShieldCheck, Vote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { UserNav } from "@/components/UserNav";
+import { useDashActiveElections, useDashPastElections, useDashUpcomingElections } from "@/hooks/election/useElection";
 
-const DUMMY_ELECTIONS = [
-  {
-    election_id: 1,
-    title: "2023 Nigerian General Elections",
-    is_active: true,
-    start_date: "Feb 25, 2023",
-    end_date: "Feb 26, 2023",
-  },
-  {
-    election_id: 2,
-    title: "2023 Gubernatorial Elections",
-    is_active: false,
-    start_date: "Mar 11, 2023",
-    end_date: "Mar 12, 2023",
-  },
-  {
-    election_id: 3,
-    title: "FCT Area Council Elections",
-    is_active: false,
-    start_date: "May 20, 2023",
-    end_date: "May 20, 2023",
-  }
-] as any[];
+const formatDate = (dateString: string) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+
 
 export default function VoterLanding() {
-  const { data: elections } = useElections();
+  const { data: activeElections, isLoading: isActiveLoading } = useDashActiveElections();
+  const { data: pastElections, isLoading: isPastLoading } = useDashPastElections();
+  const { data: upcomingElections, isLoading: isUpcomingLoading } = useDashUpcomingElections();
   const navigate = useNavigate();
 
-  const displayElections = elections || DUMMY_ELECTIONS;
+  const displayActive = activeElections || [];
+  const displayUpcoming = upcomingElections || [];
+  const displayPast = pastElections || [];
+  const isLoading = isActiveLoading || isPastLoading || isUpcomingLoading;
 
-  const activeElections = displayElections?.filter(e => e.is_active) || [];
-  const upcomingElections = displayElections?.filter(e => !e.is_active) || [];
-
-  // if (isLoading) {
-  //     return <div className="p-10 container mx-auto">Loading elections...</div>;
-  // }
+  if (isLoading) {
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50">
@@ -72,7 +66,7 @@ export default function VoterLanding() {
                 <Vote className="h-6 w-6 text-white" />
               </div>
               <div>
-                <p className="text-2xl font-bold">{activeElections.length}</p>
+                <p className="text-2xl font-bold">{displayActive.length}</p>
                 <p className="text-sm text-white/70 font-medium">Active Elections</p>
               </div>
             </div>
@@ -103,9 +97,9 @@ export default function VoterLanding() {
           </div>
 
           <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {activeElections.length > 0 ? (
-              activeElections.map((election) => (
-                <Card key={election.election_id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
+            {displayActive.length > 0 ? (
+              displayActive.map((election) => (
+                <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
                       <Badge variant="secondary" className="bg-[#0F3D3E] text-white hover:bg-[#0F3D3E]/90">
@@ -113,7 +107,7 @@ export default function VoterLanding() {
                       </Badge>
                       <span className="flex h-2 w-2 rounded-full bg-green-500"></span>
                     </div>
-                    <CardTitle className="text-xl font-bold text-[#0F172A] leading-tight">
+                    <CardTitle className="text-xl font-bold text-[#0F172A] leading-tight capitalize">
                       {election.title}
                     </CardTitle>
                     <p className="text-muted-foreground mt-2 text-sm">
@@ -127,7 +121,7 @@ export default function VoterLanding() {
                       </div>
                       <div>
                         <p className="font-medium text-slate-900">Election Period</p>
-                        <p className="text-slate-500">{election.start_date} - {election.end_date}</p>
+                        <p className="text-slate-500">{formatDate(election.start_date)} - {formatDate(election.end_date)}</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3 text-sm text-slate-600">
@@ -143,7 +137,7 @@ export default function VoterLanding() {
                   <CardFooter className="pt-2">
                     <Button
                       className="w-full bg-[#0F4C4F] hover:bg-[#0F4C4F]/90 text-white"
-                      onClick={() => navigate(`/vote/elections/${election.election_id}`)}
+                      onClick={() => navigate(`/vote/elections/${election.id}`)}
                     >
                       Vote Now <ArrowRight className="ml-2 h-4 w-4" />
                     </Button>
@@ -158,32 +152,35 @@ export default function VoterLanding() {
           </div>
         </div>
 
-        {/* Upcoming Elections Section */}
-        <div>
-          <div className="mb-8">
-            <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-blue-100 text-blue-800 mb-4">
-              <Clock className="h-3 w-3 mr-2" />
-              Coming Soon
-            </div>
-            <h2 className="text-3xl font-bold tracking-tight text-[#0F172A] mb-2">Upcoming Elections</h2>
-            <p className="text-muted-foreground text-lg">Prepare for future elections</p>
-          </div>
+      </div>
 
-          <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {upcomingElections.length > 0 ? (
-              upcomingElections.map((election) => (
-                <Card key={election.election_id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow opacity-90">
+      <div className="container mx-auto py-12 px-4 md:px-10">
+        {/* Upcoming Elections Section */}
+        {displayUpcoming.length > 0 && (
+          <div className="mb-12">
+            <div className="mb-8">
+              <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-blue-100 text-blue-800 mb-4">
+                <span className="flex h-2 w-2 rounded-full bg-blue-500 mr-2"></span>
+                Coming Soon
+              </div>
+              <h2 className="text-3xl font-bold tracking-tight text-[#0F172A] mb-2">Upcoming Elections</h2>
+              <p className="text-muted-foreground text-lg">Prepare for future elections</p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {displayUpcoming.map((election) => (
+                <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow">
                   <CardHeader className="pb-4">
                     <div className="flex justify-between items-start mb-2">
-                      <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
+                      <Badge variant="outline" className="border-blue-500 text-blue-700">
                         Upcoming
                       </Badge>
                     </div>
-                    <CardTitle className="text-xl font-bold text-[#0F172A] leading-tight">
+                    <CardTitle className="text-xl font-bold text-[#0F172A] leading-tight capitalize">
                       {election.title}
                     </CardTitle>
                     <p className="text-muted-foreground mt-2 text-sm">
-                      Starts on {election.start_date}
+                      Starting soon
                     </p>
                   </CardHeader>
                   <CardContent className="flex-1 space-y-4">
@@ -192,8 +189,8 @@ export default function VoterLanding() {
                         <Calendar className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium text-slate-900">Election Period</p>
-                        <p className="text-slate-500">{election.start_date} - {election.end_date}</p>
+                        <p className="font-medium text-slate-900">Start Date</p>
+                        <p className="text-slate-500">{formatDate(election.start_date)}</p>
                       </div>
                     </div>
                   </CardContent>
@@ -203,18 +200,61 @@ export default function VoterLanding() {
                       className="w-full"
                       disabled
                     >
-                      Opens Soon
+                      Opens on {formatDate(election.start_date)}
                     </Button>
                   </CardFooter>
                 </Card>
-              ))
-            ) : (
-              <div className="col-span-full text-center py-10 text-muted-foreground">
-                No upcoming elections found.
-              </div>
-            )}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* Past Elections Section */}
+        {displayPast.length > 0 && (
+          <div className="mb-12">
+            <div className="mb-8">
+              <h2 className="text-3xl font-bold tracking-tight text-[#0F172A] mb-2">Past Elections</h2>
+              <p className="text-muted-foreground text-lg">View results of concluded elections</p>
+            </div>
+
+            <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+              {displayPast.map((election) => (
+                <Card key={election.id} className="flex flex-col border-slate-200 shadow-sm hover:shadow-md transition-shadow opacity-75 hover:opacity-100">
+                  <CardHeader className="pb-4">
+                    <div className="flex justify-between items-start mb-2">
+                      <Badge variant="secondary" className="bg-slate-100 text-slate-600">
+                        Concluded
+                      </Badge>
+                    </div>
+                    <CardTitle className="text-xl font-bold text-[#0F172A] leading-tight capitalize">
+                      {election.title}
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="flex-1 space-y-4">
+                    <div className="flex items-start space-x-3 text-sm text-slate-600">
+                      <div className="bg-slate-100 p-2 rounded-md">
+                        <Calendar className="h-4 w-4" />
+                      </div>
+                      <div>
+                        <p className="font-medium text-slate-900">Concluded Date</p>
+                        <p className="text-slate-500">{formatDate(election.end_date)}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                  <CardFooter className="pt-2">
+                    <Button
+                      variant="ghost"
+                      className="w-full border"
+                      onClick={() => navigate(`/vote/elections/${election.id}`)}
+                    >
+                      View Results
+                    </Button>
+                  </CardFooter>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

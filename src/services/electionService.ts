@@ -38,6 +38,41 @@ export const getElection = async (id: number) => {
   const json = await response.json();
   return json.data;
 };
+export const getDashElection = async (id: number) => {
+  const response = await fetch(`${API_URL}/api/elections/${id}`, {
+    headers: getJsonAuthHeaders(),
+  });
+  if (!response.ok) throw new Error("Failed to fetch election");
+  const json = await response.json();
+  return json.data;
+};
+export const getDashActiveElections = async () => {
+  const response = await fetch(`${API_URL}/api/elections/active`, {
+    headers: getJsonAuthHeaders(),
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch election");
+  const json = await response.json();
+  return json.data;
+};
+export const getDashPastElections = async () => {
+  const response = await fetch(`${API_URL}/api/elections/past`, {
+    headers: getJsonAuthHeaders(),
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch election");
+  const json = await response.json();
+  return json.data;
+};
+export const getDashUpcomingElections = async () => {
+  const response = await fetch(`${API_URL}/api/elections/upcoming`, {
+    headers: getJsonAuthHeaders(),
+  });
+
+  if (!response.ok) throw new Error("Failed to fetch election");
+  const json = await response.json();
+  return json.data;
+};
 
 export const updateElection = async (id: string, data: Partial<Election>) => {
   const formData = new FormData();
@@ -58,6 +93,7 @@ export const updateElection = async (id: string, data: Partial<Election>) => {
   return response.json();
 };
 
+
 export const deleteElection = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/elections/${id}`, {
     method: "DELETE",
@@ -66,3 +102,17 @@ export const deleteElection = async (id: string) => {
   if (!response.ok) throw new Error("Failed to delete election");
   return response.json();
 };
+
+export const voteSecure = async (electionId: number, positionId: number, candidateId: number) => {
+  const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
+    method: "POST",
+    headers: getJsonAuthHeaders(),
+    body: JSON.stringify({ candidate_id: candidateId }),
+  });
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.message || "Failed to cast vote");
+  }
+  return response.json();
+};
+

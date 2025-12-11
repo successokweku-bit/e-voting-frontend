@@ -4,6 +4,7 @@ import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
 import { ArrowUpDown, CircleFadingPlus, MoreVertical, Pencil, Trash } from "lucide-react"
 import { type Election } from "@/types/types"
+import { Spinner } from "@/components/ui/spinner"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -117,12 +118,16 @@ const columns: ColumnDef<Election>[] = [
 ]
 
 
- 
+
 export default function Elections() {
-  const { data: elections , isLoading} = useElections()
+  const { data: elections, isLoading } = useElections()
 
   if (isLoading) {
-    return <div className="container mx-auto md:px-10 py-10">Loading...</div>
+    return (
+      <div className="flex bg-slate-50 h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   const data = elections || []

@@ -73,6 +73,7 @@ export const candidateSchema = Yup.object().shape({
       description: Yup.string().required("Description is required"),
     })
   ).optional(),
+  image: Yup.mixed().nullable().optional(),
 });
 
 export const electionSchema = Yup.object().shape({

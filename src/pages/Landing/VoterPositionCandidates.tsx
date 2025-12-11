@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
-import { useCandidates } from "@/hooks/candidates/useCandidates";
+import { useDashCandidates } from "@/hooks/candidates/useCandidates";
+import { useDashElection, useVote } from "@/hooks/election/useElection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, CheckCircle2, CheckSquare, Check } from "lucide-react";
+import { ArrowLeft, CheckCircle2, CheckSquare, Check, Loader2 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -16,151 +17,29 @@ import {
 import { toast } from "sonner";
 import { useAuth } from "@/contexts/AuthContext";
 import { UserNav } from "@/components/UserNav";
+import { API_URL } from "@/services/apiUtils";
 
-// Mock positions data
-const POSITIONS_DATA: Record<string, { title: string; description: string }> = {
-  "1": { title: "President of Nigeria", description: "Head of State and Government, Commander-in-Chief of the Armed Forces" },
-  "2": { title: "Vice President", description: "Second-in-command to the President" },
-  "3": { title: "Senator (Lagos Central)", description: "Representative for Lagos Central Senatorial District" },
-  "4": { title: "Senator (Kano South)", description: "Representative for Kano South Senatorial District" },
-  "5": { title: "Senator (Rivers East)", description: "Representative for Rivers East Senatorial District" },
-};
-
-const DUMMY_CANDIDATES = [
-  {
-    id: "1",
-    name: "Bola Ahmed Tinubu",
-    party: "All Progressives Congress (APC)",
-    position: "President of Nigeria",
-    election_id: "1",
-    bio: "Former Governor of Lagos State and National Leader of the APC.",
-    initials: "BAT",
-    priorities: [
-      "Economic Renewal",
-      "National Security",
-      "Infrastructure Development"
-    ]
-  },
-  {
-    id: "2",
-    name: "Atiku Abubakar",
-    party: "Peoples Democratic Party (PDP)",
-    position: "President of Nigeria",
-    election_id: "1",
-    bio: "Former Vice President of Nigeria and businessman.",
-    initials: "AA",
-    priorities: [
-      "Unifying Nigeria",
-      "Economic Recovery",
-      "Education Reform"
-    ]
-  },
-  {
-    id: "3",
-    name: "Peter Obi",
-    party: "Labour Party (LP)",
-    position: "President of Nigeria",
-    election_id: "1",
-    bio: "Former Governor of Anambra State and businessman.",
-    initials: "PO",
-    priorities: [
-      "Production over Consumption",
-      "Cost of Governance Reduction",
-      "Institutional Reforms"
-    ]
-  },
-  {
-    id: "4",
-    name: "Kashim Shettima",
-    party: "All Progressives Congress (APC)",
-    position: "Vice President",
-    election_id: "1",
-    bio: "Former Governor of Borno State.",
-    initials: "KS",
-    priorities: [
-      "Security Strategy",
-      "Agricultural Growth",
-      "Youth Empowerment"
-    ]
-  },
-  {
-    id: "5",
-    name: "Ifeanyi Okowa",
-    party: "Peoples Democratic Party (PDP)",
-    position: "Vice President",
-    election_id: "1",
-    bio: "Governor of Delta State.",
-    initials: "IO",
-    priorities: [
-      "Healthcare Systems",
-      "Educational Development",
-      "Fiscal Federalism"
-    ]
-  },
-  {
-    id: "6",
-    name: "Yusuf Datti Baba-Ahmed",
-    party: "Labour Party (LP)",
-    position: "Vice President",
-    election_id: "1",
-    bio: "Economist and politician.",
-    initials: "YDB",
-    priorities: [
-      "Education",
-      "Economic Stability",
-      "Rule of Law"
-    ]
-  },
-  {
-    id: "7",
-    name: "Wasiu Eshinlokun-Sanni",
-    party: "All Progressives Congress (APC)",
-    position: "Senator (Lagos Central)",
-    election_id: "1",
-    bio: "Deputy Speaker of the Lagos State House of Assembly.",
-    initials: "WES",
-    priorities: [
-      "Legislative Excellence",
-      "Community Development",
-      "Youth Engagement"
-    ]
-  },
-  {
-    id: "8",
-    name: "Gomez Adewale",
-    party: "Peoples Democratic Party (PDP)",
-    position: "Senator (Lagos Central)",
-    election_id: "1",
-    bio: "Businessman and philanthropist.",
-    initials: "GA",
-    priorities: [
-      "Social Welfare",
-      "Urban Renewal",
-      "Transparent Representation"
-    ]
-  }
-] as any[];
 
 export default function VoterPositionCandidates() {
   const { electionId, positionId } = useParams<{ electionId: string; positionId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
   const { isAuthenticated } = useAuth();
-  const { data: candidates, isLoading } = useCandidates();
-  const [selectedCandidateId, setSelectedCandidateId] = useState<string | null>(null);
+
+  const { data: candidates, isLoading: isCandidatesLoading } = useDashCandidates(Number(electionId), Number(positionId));
+  const { data: election, isLoading: isElectionLoading } = useDashElection(Number(electionId));
+
+  const [selectedCandidateId, setSelectedCandidateId] = useState<number | null>(null);
   const [isVoteDialogOpen, setIsVoteDialogOpen] = useState(false);
+  const { mutate: vote, isPending: isVoting } = useVote();
 
-  // Filter candidates for this election and position  
-  const positionInfo = POSITIONS_DATA[positionId || ""] || { title: "Position", description: "Select a candidate to cast your vote" };
-  const positionTitle = positionInfo.title;
+  // Find position info from election data
+  const positionInfo = election?.positions?.find(p => p.id === Number(positionId));
+  const isLoading = isCandidatesLoading || isElectionLoading;
 
-  const displayCandidates = candidates || DUMMY_CANDIDATES;
+  const positionCandidates = candidates || [];
 
-  const positionCandidates = displayCandidates?.filter(
-    (c) => c.election_id === electionId && c.position === positionTitle
-  ) || [];
-
-  const handleSelectCandidate = (candidateId: string) => {
+  const handleSelectCandidate = (candidateId: number) => {
     setSelectedCandidateId(candidateId);
   };
 
@@ -182,14 +61,29 @@ export default function VoterPositionCandidates() {
 
   const confirmVote = () => {
     const candidate = positionCandidates.find(c => c.id === selectedCandidateId);
-    if (candidate) {
-      toast.success(`Vote cast for ${candidate.name}!`);
-      setIsVoteDialogOpen(false);
-      navigate(`/vote/elections/${electionId}`);
+    if (candidate && electionId && positionId) {
+      vote(
+        {
+          electionId: Number(electionId),
+          positionId: Number(positionId),
+          candidateId: candidate.id,
+        },
+        {
+          onSuccess: () => {
+            toast.success(`Vote cast for ${candidate.name}!`);
+            setIsVoteDialogOpen(false);
+            navigate(`/vote/elections/${electionId}`);
+          },
+          onError: (error: Error) => {
+            toast.error(error.message || "Failed to cast vote.");
+            setIsVoteDialogOpen(false);
+          },
+        }
+      );
     }
   };
 
-  if (isLoading && !candidates && !DUMMY_CANDIDATES) {
+  if (isLoading) {
     return <div className="p-10 container mx-auto">Loading candidates...</div>;
   }
 
@@ -216,9 +110,9 @@ export default function VoterPositionCandidates() {
             </Badge>
           </div>
 
-          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">{positionInfo.title}</h1>
+          <h1 className="text-4xl md:text-5xl font-bold mb-4 tracking-tight">{positionInfo?.title || "Position"}</h1>
           <p className="text-white/80 text-lg md:text-xl max-w-2xl leading-relaxed">
-            {positionInfo.description}
+            {positionInfo?.description || "Select a candidate to cast your vote"}
           </p>
         </div>
       </div>
@@ -231,76 +125,98 @@ export default function VoterPositionCandidates() {
 
         {positionCandidates.length > 0 ? (
           <div className="grid gap-6 md:grid-cols-3">
-            {positionCandidates.map((candidate) => (
-              <Card
-                key={candidate.id}
-                className={`relative cursor-pointer transition-all duration-200 ${selectedCandidateId === candidate.id
-                  ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
-                  : 'border-slate-200 hover:border-slate-300'
-                  }`}
-                onClick={() => handleSelectCandidate(candidate.id)}
-              >
-                <CardContent className="p-6">
-                  <div className="flex items-start justify-between mb-4">
-                    <div className="flex items-center gap-4">
-                      <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center text-xl font-bold text-slate-600">
-                        {candidate.initials}
+            {positionCandidates.map((candidate) => {
+              const initials = candidate.name
+                .split(" ")
+                .map((n) => n[0])
+                .join("")
+                .toUpperCase()
+                .slice(0, 3);
+
+              return (
+                <Card
+                  key={candidate.id}
+                  className={`relative cursor-pointer transition-all duration-200 ${selectedCandidateId === candidate.id
+                    ? 'border-[#134E4A] shadow-md ring-2 ring-[#134E4A]/20'
+                    : 'border-slate-200 hover:border-slate-300'
+                    }`}
+                  onClick={() => handleSelectCandidate(candidate.id)}
+                >
+                  <CardContent className="p-6">
+                    <div className="flex items-start justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="h-16 w-16 rounded-full bg-slate-100 flex items-center justify-center text-xl font-bold text-slate-600 overflow-hidden border border-slate-200">
+                          {candidate.profile_image_url ? (
+                            <img
+                              src={`${API_URL}${candidate.profile_image_url}`}
+                              alt={candidate.name}
+                              className="h-full w-full object-cover"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).style.display = 'none';
+                                (e.target as HTMLImageElement).nextElementSibling?.classList.remove('hidden');
+                              }}
+                            />
+                          ) : (
+                            initials
+                          )}
+                          {candidate.profile_image_url && <span className="hidden leading-none">{initials}</span>}
+                        </div>
+                        <div>
+                          <h3 className="text-xl font-bold text-[#0F172A] mb-1">{candidate.name}</h3>
+                          <p className="text-sm text-muted-foreground">{candidate.party?.name}</p>
+                        </div>
                       </div>
-                      <div>
-                        <h3 className="text-xl font-bold text-[#0F172A] mb-1">{candidate.name}</h3>
-                        <p className="text-sm text-muted-foreground">{candidate.party}</p>
+                      <div
+                        className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedCandidateId === candidate.id
+                          ? 'border-[#134E4A] bg-[#134E4A]'
+                          : 'border-slate-300'
+                          }`}
+                      >
+                        {selectedCandidateId === candidate.id && (
+                          <div className="h-3 w-3 rounded-full bg-white" />
+                        )}
                       </div>
                     </div>
-                    <div
-                      className={`h-6 w-6 rounded-full border-2 flex items-center justify-center shrink-0 transition-colors ${selectedCandidateId === candidate.id
-                        ? 'border-[#134E4A] bg-[#134E4A]'
-                        : 'border-slate-300'
+
+                    <p className="text-sm text-slate-600 mb-4 line-clamp-3">{candidate.bio}</p>
+
+                    <div className="bg-slate-50 rounded-lg p-4">
+                      <h4 className="text-sm font-semibold text-[#0F172A] mb-3 flex items-center gap-2">
+                        <div className="h-1 w-1 bg-[#134E4A] rounded-full"></div>
+                        Platform & Priorities
+                      </h4>
+                      <ul className="space-y-2">
+                        {candidate.manifestos?.slice(0, 3).map((manifesto, idx) => (
+                          <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
+                            <Check className="h-4 w-4 text-[#134E4A] mt-0.5 shrink-0" />
+                            <span className="line-clamp-1" title={manifesto.description}>{manifesto.title}</span>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+
+                    <Button
+                      className={`w-full mt-4 ${selectedCandidateId === candidate.id
+                        ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
+                        : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
                         }`}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleSelectCandidate(candidate.id);
+                      }}
                     >
-                      {selectedCandidateId === candidate.id && (
-                        <div className="h-3 w-3 rounded-full bg-white" />
-                      )}
-                    </div>
-                  </div>
-
-                  <p className="text-sm text-slate-600 mb-4">{candidate.bio}</p>
-
-                  <div className="bg-slate-50 rounded-lg p-4">
-                    <h4 className="text-sm font-semibold text-[#0F172A] mb-3 flex items-center gap-2">
-                      <div className="h-1 w-1 bg-[#134E4A] rounded-full"></div>
-                      Platform & Priorities
-                    </h4>
-                    <ul className="space-y-2">
-                      {candidate.priorities?.map((priority: string, idx: number) => (
-                        <li key={idx} className="flex items-start gap-2 text-sm text-slate-700">
-                          <Check className="h-4 w-4 text-[#134E4A] mt-0.5 shrink-0" />
-                          <span>{priority}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-
-                  <Button
-                    className={`w-full mt-4 ${selectedCandidateId === candidate.id
-                      ? 'bg-[#134E4A] hover:bg-[#134E4A]/90'
-                      : 'bg-slate-100 text-slate-600 hover:bg-slate-200'
-                      }`}
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleSelectCandidate(candidate.id);
-                    }}
-                  >
-                    Select Candidate
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
+                      Select Candidate
+                    </Button>
+                  </CardContent>
+                </Card>
+              );
+            })}
           </div>
         ) : (
           <div className="text-center py-10">
             <p className="text-muted-foreground text-lg">No candidates found for this position.</p>
             <p className="text-sm text-slate-500 mt-2">
-              (Ensure candidates are created with position "{positionTitle}" and election ID "{electionId}")
+              (Ensure candidates are created with position ID "{positionId}" and election ID "{electionId}")
             </p>
           </div>
         )}
@@ -331,24 +247,45 @@ export default function VoterPositionCandidates() {
 
           {selectedCandidateId && (() => {
             const candidate = positionCandidates.find(c => c.id === selectedCandidateId);
-            return candidate ? (
+            if (!candidate) return null;
+
+            const initials = candidate.name
+              .split(" ")
+              .map((n) => n[0])
+              .join("")
+              .toUpperCase()
+              .slice(0, 3);
+
+            return (
               <div className="flex items-center gap-4 py-4 bg-slate-50 rounded-lg px-4 my-2">
-                <div className="h-12 w-12 rounded-full bg-slate-200 flex items-center justify-center shrink-0 text-lg font-bold text-slate-600">
-                  {candidate.initials}
+                <div className="h-12 w-12 rounded-full bg-slate-200 flex items-center justify-center shrink-0 text-lg font-bold text-slate-600 overflow-hidden border border-slate-300">
+                  {candidate.profile_image_url ? (
+                    <img
+                      src={`${API_URL}${candidate.profile_image_url}`}
+                      alt={candidate.name}
+                      className="h-full w-full object-cover"
+                    />
+                  ) : (
+                    initials
+                  )}
                 </div>
                 <div>
                   <h4 className="font-bold text-[#0F172A]">{candidate.name}</h4>
-                  <p className="text-sm text-muted-foreground">{candidate.party}</p>
+                  <p className="text-sm text-muted-foreground">{candidate.party?.name}</p>
                 </div>
               </div>
-            ) : null;
+            );
           })()}
 
           <DialogFooter className="gap-2 sm:gap-0">
             <Button variant="outline" onClick={() => setIsVoteDialogOpen(false)}>Cancel</Button>
-            <Button className="bg-[#134E4A] hover:bg-[#134E4A]/90" onClick={confirmVote}>
-              <CheckCircle2 className="mr-2 h-4 w-4" />
-              Confirm Vote
+            <Button className="bg-[#134E4A] hover:bg-[#134E4A]/90" onClick={confirmVote} disabled={isVoting}>
+              {isVoting ? (
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              ) : (
+                <CheckCircle2 className="mr-2 h-4 w-4" />
+              )}
+              {isVoting ? "Voting..." : "Confirm Vote"}
             </Button>
           </DialogFooter>
         </DialogContent>
