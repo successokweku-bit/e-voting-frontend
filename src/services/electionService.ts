@@ -104,10 +104,15 @@ export const deleteElection = async (id: string) => {
 };
 
 export const voteSecure = async (electionId: number, positionId: number, candidateId: number) => {
+  const formData = new FormData();
+  formData.append("candidate_id", String(candidateId));
+  formData.append("position_id", String(positionId));
+  formData.append("election_id", String(electionId));
+
   const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
     method: "POST",
     headers: getAuthHeaders(),
-    body: JSON.stringify({ candidate_id: candidateId }),
+    body: formData,
 
   });
 
