@@ -1,4 +1,4 @@
-import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
+import { API_URL, getAuthHeaders, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { Election } from "../types/types";
 
 export const createElection = async (data: Omit<Election, "election_id" | "created_at" | "position_count">) => {
@@ -103,12 +103,11 @@ export const deleteElection = async (id: string) => {
   return response.json();
 };
 
-export const voteSecure = async (electionId: number, positionId: number, candidateId: number) => {
+export const voteSecure = async (electionId: number, positionId: number ) => {
   const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
     method: "POST",
-    headers: getJsonAuthHeaders(),
-    body: JSON.stringify({ candidate_id: candidateId }),
-  });
+    headers: getAuthHeaders(),
+   });
   if (!response.ok) {
     const errorData = await response.json();
     throw new Error(errorData.message || "Failed to cast vote");

@@ -43,8 +43,8 @@ export const useDashUpcomingElections = () => {
 export const useVote = () => {
     const queryClient = useQueryClient();
     return useMutation({
-        mutationFn: ({ electionId, positionId, candidateId }: { electionId: number; positionId: number; candidateId: number }) =>
-            voteSecure(electionId, positionId, candidateId),
+        mutationFn: ({ electionId, positionId }: { electionId: number; positionId: number }) =>
+            voteSecure(electionId, positionId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["dash-election"] });
         },
