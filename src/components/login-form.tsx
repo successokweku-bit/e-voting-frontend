@@ -30,8 +30,7 @@ export function LoginForm({
   const handleSubmit = (values: any) => {
     mutate(values, {
       onSuccess: (response) => {
-        console.log("Login response data:", response);
-
+ 
 
         const data = response.data;
         const accessToken = data.access_token;

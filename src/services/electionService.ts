@@ -110,8 +110,8 @@ export const voteSecure = async (electionId: number, positionId: number, candida
   formData.append("election_id", String(electionId));
 
   const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
-    method: "POST",
-    headers: getAuthHeaders(),
+    method: "POST", 
+    headers: getHeaders(),
     body: formData,
 
   });
