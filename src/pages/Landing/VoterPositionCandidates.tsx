@@ -1,10 +1,10 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDashCandidates } from "@/hooks/candidates/useCandidates";
 import { useDashElection, useVote } from "@/hooks/election/useElection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { ArrowLeft, CheckCircle2, CheckSquare, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, CheckCircle2, CheckSquare, Check, Loader2, Copy } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -31,7 +31,26 @@ export default function VoterPositionCandidates() {
 
   const [selectedCandidateId, setSelectedCandidateId] = useState<number | null>(null);
   const [isVoteDialogOpen, setIsVoteDialogOpen] = useState(false);
+  const [voteReceipt, setVoteReceipt] = useState<string | null>(null);
+  const [isReceiptDialogOpen, setIsReceiptDialogOpen] = useState(false);
   const { mutate: vote, isPending: isVoting } = useVote();
+
+  // Redirect if election is inactive
+  useEffect(() => {
+    if (!isElectionLoading && election && !Boolean(election.is_active)) {
+      toast.error("This election is closed.");
+      navigate(`/vote/elections/${electionId}`, { replace: true });
+    }
+  }, [isElectionLoading, election, electionId, navigate]);
+
+  if (!isElectionLoading) {
+    if (!election) {
+      return <div className="p-10 text-center text-muted-foreground">Election not found or failed to load.</div>;
+    }
+    if (!Boolean(election.is_active)) {
+      return null; // Don't render content while redirecting
+    }
+  }
 
   // Find position info from election data
   const positionInfo = election?.positions?.find(p => p.id === Number(positionId));
@@ -69,10 +88,17 @@ export default function VoterPositionCandidates() {
           candidateId: candidate.id,
         },
         {
-          onSuccess: () => {
+          onSuccess: (data: any) => {
+            console.log("Vote response:", data);
             toast.success(`Vote cast for ${candidate.name}!`);
             setIsVoteDialogOpen(false);
-            navigate(`/vote/elections/${electionId}`);
+            if (data?.data?.vote_receipt) {
+              setVoteReceipt(data.data.vote_receipt);
+              setIsReceiptDialogOpen(true);
+            } else {
+              // Fallback if no receipt
+              navigate(`/vote/elections/${electionId}`);
+            }
           },
           onError: (error: Error) => {
             toast.error(error.message || "Failed to cast vote.");
@@ -286,6 +312,67 @@ export default function VoterPositionCandidates() {
                 <CheckCircle2 className="mr-2 h-4 w-4" />
               )}
               {isVoting ? "Voting..." : "Confirm Vote"}
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      <Dialog open={isReceiptDialogOpen} onOpenChange={setIsReceiptDialogOpen}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle className="flex items-center gap-2 text-green-700">
+              <CheckCircle2 className="h-6 w-6" />
+              Vote Cast Successfully
+            </DialogTitle>
+            <DialogDescription>
+              Your vote has been recorded. Please save your vote receipt below for verification purposes.
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="flex flex-col items-center justify-center p-6 bg-slate-50 rounded-lg space-y-4">
+            <p className="text-sm font-medium text-slate-500">Vote Receipt Code</p>
+            <div className="flex items-center gap-2 w-full max-w-sm">
+              <code className="flex-1 bg-white border border-slate-200 px-4 py-3 rounded-md text-lg font-mono text-center font-bold text-[#0F172A] tracking-wider select-all">
+                {voteReceipt}
+              </code>
+              <Button
+                size="icon"
+                variant="outline"
+                className="shrink-0"
+                onClick={() => {
+                  if (voteReceipt) {
+                    navigator.clipboard.writeText(voteReceipt);
+                    toast.success("Receipt code copied to clipboard");
+                  }
+                }}
+                title="Copy to clipboard"
+              >
+                <Copy className="h-4 w-4" />
+              </Button>
+            </div>
+            <p className="text-xs text-slate-400 text-center">
+              You can use this code to verify your vote later.
+            </p>
+          </div>
+
+          <DialogFooter className="sm:justify-between flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setIsReceiptDialogOpen(false);
+                navigate('/verify');
+              }}
+            >
+              Verify Vote
+            </Button>
+            <Button
+              className="bg-[#134E4A] hover:bg-[#134E4A]/90"
+              onClick={() => {
+                setIsReceiptDialogOpen(false);
+                navigate(`/vote/elections/${electionId}`);
+              }}
+            >
+              Close & Continue
             </Button>
           </DialogFooter>
         </DialogContent>

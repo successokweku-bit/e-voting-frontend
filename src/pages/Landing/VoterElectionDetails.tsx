@@ -6,6 +6,8 @@ import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, Calendar, Users, ChevronRight, CheckSquare, Vote } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { UserNav } from "@/components/UserNav";
+import { toast } from "sonner";
+
 
 const formatDate = (dateString: string) => {
   const date = new Date(dateString);
@@ -20,6 +22,7 @@ export default function VoterElectionDetails() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { data: election, isLoading } = useDashElection(Number(id) || 0);
+
 
   if (isLoading) {
     return (
@@ -113,8 +116,14 @@ export default function VoterElectionDetails() {
             election.positions.map((position, index) => (
               <Card
                 key={position.id}
-                className="group cursor-pointer hover:border-[#134E4A] hover:shadow-md transition-all duration-200"
-                onClick={() => navigate(`/vote/elections/${id}/positions/${position.id}`)}
+                className={`group cursor-pointer hover:shadow-md transition-all duration-200 ${Boolean(election.is_active) ? 'hover:border-[#134E4A]' : 'opacity-75'}`}
+                onClick={() => {
+                  if (Boolean(election.is_active)) {
+                    navigate(`/vote/elections/${id}/positions/${position.id}`);
+                  } else {
+                    toast.error("Voting is effectively closed for this election.");
+                  }
+                }}
               >
                 <CardContent className="p-6 flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -143,6 +152,7 @@ export default function VoterElectionDetails() {
           )}
         </div>
       </div>
+
     </div>
   );
 }

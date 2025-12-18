@@ -158,3 +158,20 @@ export interface DashboardStats {
   total_parties: number;
   active_elections: number;
 }
+
+export interface PositionStatistics {
+  position_id: number;
+  position_title: string;
+  total_votes: number;
+  verified_votes: number;
+  pending_votes: number;
+}
+
+export interface SecureElectionStatistics {
+  election_id: number;
+  election_name: string;
+  total_secure_votes: number;
+  verification_attempts: number;
+  position_statistics: PositionStatistics[];
+  election_status: string;
+}

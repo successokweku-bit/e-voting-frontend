@@ -1,4 +1,4 @@
-import { API_URL, getAuthHeaders, getHeaders, getJsonAuthHeaders } from "./apiUtils";
+import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { Election } from "../types/types";
 
 export const createElection = async (data: Omit<Election, "election_id" | "created_at" | "position_count">) => {
@@ -56,7 +56,7 @@ export const getDashActiveElections = async () => {
   return json.data;
 };
 export const getDashPastElections = async () => {
-  const response = await fetch(`${API_URL}/api/elections/past`, {
+  const response = await fetch(`${API_URL}/api/past`, {
     headers: getJsonAuthHeaders(),
   });
 
@@ -65,7 +65,7 @@ export const getDashPastElections = async () => {
   return json.data;
 };
 export const getDashUpcomingElections = async () => {
-  const response = await fetch(`${API_URL}/api/elections/upcoming`, {
+  const response = await fetch(`${API_URL}/api/upcoming`, {
     headers: getJsonAuthHeaders(),
   });
 
@@ -106,11 +106,8 @@ export const deleteElection = async (id: string) => {
 export const voteSecure = async (electionId: number, positionId: number, candidateId: number) => {
   const formData = new FormData();
   formData.append("candidate_id", String(candidateId));
-  formData.append("position_id", String(positionId));
-  formData.append("election_id", String(electionId));
-
   const response = await fetch(`${API_URL}/api/elections/${electionId}/positions/${positionId}/vote-secure`, {
-    method: "POST", 
+    method: "POST",
     headers: getHeaders(),
     body: formData,
 
@@ -118,8 +115,42 @@ export const voteSecure = async (electionId: number, positionId: number, candida
 
   if (!response.ok) {
     const errorData = await response.json();
-    throw new Error(errorData.message || "Failed to cast vote");
+    throw new Error(errorData.error || errorData.message || "Failed to cast vote");
+  }
+  return response.json();
+
+};
+
+export const verifyVoteReceipt = async (receiptCode: string) => {
+  const formData = new FormData();
+  formData.append("vote_receipt", receiptCode);
+  const response = await fetch(`${API_URL}/api/vote/verify-receipt`, {
+    method: "POST",
+    headers: getHeaders(),
+    body: formData,
+  });
+
+  if (!response.ok) {
+    const errorData = await response.json();
+    throw new Error(errorData.error || errorData.message || "Failed to verify receipt");
   }
   return response.json();
 };
+
+
+
+
+
+export const getMyVote = async (electionId: number) => {
+  const response = await fetch(`${API_URL}/api/elections/${electionId}/my-vote`, {
+    headers: getJsonAuthHeaders(),
+  });
+  if (!response.ok) {
+    if (response.status === 404) return null;
+    throw new Error("Failed to fetch vote details");
+  }
+  const json = await response.json();
+  return json.data;
+};
+
 

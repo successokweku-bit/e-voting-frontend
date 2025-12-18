@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, User } from "lucide-react";
+import { LogOut, User, Vote } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function UserNav() {
@@ -53,9 +53,22 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          <DropdownMenuItem onClick={() => navigate("/dashboard/profile")}>
-            <User className="mr-2 h-4 w-4" />
-            <span>Profile</span>
+          {['admin', 'super_admin', 'super admin'].includes(user.role) && (
+            <>
+              <DropdownMenuItem onClick={() => navigate("/dashboard")}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Dashboard</span>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={() => navigate("/dashboard/profile")}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile</span>
+              </DropdownMenuItem>
+              <DropdownMenuSeparator />
+            </>
+          )}
+          <DropdownMenuItem onClick={() => navigate("/my-votes")}>
+            <Vote className="mr-2 h-4 w-4" />
+            <span>My Votes</span>
           </DropdownMenuItem>
         </DropdownMenuGroup>
         <DropdownMenuSeparator />

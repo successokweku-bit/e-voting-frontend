@@ -23,14 +23,14 @@ export function LoginForm({
   const location = useLocation();
   const { login } = useAuth();
 
-  const from = location.state?.from?.pathname || "/dashboard";
+
 
   const { mutate, isPending } = useLogin();
 
   const handleSubmit = (values: any) => {
     mutate(values, {
       onSuccess: (response) => {
- 
+
 
         const data = response.data;
         const accessToken = data.access_token;
@@ -44,7 +44,16 @@ export function LoginForm({
         login(accessToken, user);
         toast.success("Login successful!");
 
-        navigate(from === location.pathname ? "/dashboard" : from, { replace: true });
+        const isAdmin = ['admin', 'super_admin', 'super admin'].includes(user.role);
+        const defaultPath = isAdmin ? "/dashboard" : "/";
+        // prevent using "from" if it was explicitly strictly set to dashboard but user is not admin? 
+        // Actually, let's just use "from" if it exists, otherwise use defaultPath. 
+        // But we need to make sure line 26 didn't already default it to /dashboard.
+        // In the original code, 'from' was calculated at the top component level using a default. 
+        // I should treat 'from' as just the state value here or re-read state.
+
+        const previousPath = location.state?.from?.pathname;
+        navigate(previousPath || defaultPath, { replace: true });
       },
       onError: (error) => {
         console.error("Login error:", error);

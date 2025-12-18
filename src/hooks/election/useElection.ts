@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { getDashActiveElections, getDashElection, getDashPastElections, getDashUpcomingElections, getElection, voteSecure } from "../../services/services";
+import { getDashActiveElections, getDashElection, getDashPastElections, getDashUpcomingElections, getElection, voteSecure, getMyVote } from "../../services/services";
 import { type Election, type ElectionDetails, type PublicElection } from "../../types/types";
 
 export const useElection = (id: number, enabled: boolean = true) => {
@@ -43,11 +43,24 @@ export const useDashUpcomingElections = () => {
 export const useVote = () => {
     const queryClient = useQueryClient();
     return useMutation({
-      mutationFn: ({ electionId, positionId, candidateId }: { electionId: number; positionId: number; candidateId: number }) =>
+        mutationFn: ({ electionId, positionId, candidateId }: { electionId: number; positionId: number; candidateId: number }) =>
             voteSecure(electionId, positionId, candidateId),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ["dash-election"] });
         },
+    });
+};
+
+
+
+
+
+export const useMyVote = (electionId: number) => {
+    return useQuery({
+        queryKey: ["my-vote", electionId],
+        queryFn: () => getMyVote(electionId),
+        enabled: !!electionId,
+        retry: false,
     });
 };
 

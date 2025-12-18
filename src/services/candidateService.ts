@@ -2,7 +2,8 @@ import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { Candidate } from "../types/types";
 
 export const createCandidate = async (data: FormData) => {
-
+  console.log(data);
+  
   const response = await fetch(`${API_URL}/admin/candidates`, {
     method: "POST",
     headers: getHeaders(),

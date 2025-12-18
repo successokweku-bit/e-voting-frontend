@@ -17,20 +17,28 @@ import Profile from "./pages/Dashboard/Profile";
 import VoterLanding from "./pages/Landing/VoterLanding";
 import VoterElectionDetails from "./pages/Landing/VoterElectionDetails";
 import VoterPositionCandidates from "./pages/Landing/VoterPositionCandidates";
+import VerifyReceipt from "./pages/Landing/VerifyReceipt";
+import MyVotes from "./pages/Landing/MyVotes";
 
 function App() {
   return (
     <Router>
       <Routes>
+        {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
-
-        {/* Voter Routes - Separate from Dashboard */}
         <Route path="/" element={<VoterLanding />} />
-        <Route path="/vote/elections/:id" element={<VoterElectionDetails />} />
-        <Route path="/vote/elections/:electionId/positions/:positionId" element={<VoterPositionCandidates />} />
+        <Route path="/verify" element={<VerifyReceipt />} />
 
+        {/* Protected Voter Routes */}
         <Route element={<ProtectedRoute />}>
+          <Route path="/my-votes" element={<MyVotes />} />
+          <Route path="/vote/elections/:id" element={<VoterElectionDetails />} />
+          <Route path="/vote/elections/:electionId/positions/:positionId" element={<VoterPositionCandidates />} />
+        </Route>
+
+        {/* Protected Dashboard Routes - Admin Only */}
+        <Route element={<ProtectedRoute allowedRoles={['admin', 'super_admin', 'super admin']} />}>
           <Route element={<DashboardLayout />}>
             <Route path="/dashboard" element={<Overview />} />
             <Route path="/dashboard/candidates" element={<Candidates />} />
@@ -44,7 +52,6 @@ function App() {
             <Route path="/dashboard/elections/:id" element={<ElectionDetails />} />
             <Route path="/dashboard/profile" element={<Profile />} />
           </Route>
-
         </Route>
       </Routes>
     </Router>

@@ -20,15 +20,14 @@ const formatDate = (dateString: string) => {
 
 export default function VoterLanding() {
   const { data: activeElections, isLoading: isActiveLoading } = useDashActiveElections();
-  // const { data: pastElections, isLoading: isPastLoading } = useDashPastElections();
-  // const { data: upcomingElections, isLoading: isUpcomingLoading } = useDashUpcomingElections();
+  const { data: pastElections, isLoading: isPastLoading } = useDashPastElections();
+  const { data: upcomingElections, isLoading: isUpcomingLoading } = useDashUpcomingElections();
   const navigate = useNavigate();
 
   const displayActive = activeElections || [];
-  // const displayUpcoming = upcomingElections || [];
-  // const displayPast = pastElections || [];
-  // const isLoading = isActiveLoading || isPastLoading || isUpcomingLoading;
-  const isLoading = isActiveLoading;
+  const displayUpcoming = upcomingElections || [];
+  const displayPast = pastElections || [];
+  const isLoading = isActiveLoading || isPastLoading || isUpcomingLoading;
 
   if (isLoading) {
     return (
@@ -156,8 +155,8 @@ export default function VoterLanding() {
       </div>
 
       <div className="container mx-auto py-12 px-4 md:px-10">
-        Upcoming Elections Section
-        {/* {displayUpcoming.length > 0 && (
+ 
+        {displayUpcoming.length > 0 && (
           <div className="mb-12">
             <div className="mb-8">
               <div className="inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 border-transparent bg-blue-100 text-blue-800 mb-4">
@@ -208,10 +207,9 @@ export default function VoterLanding() {
               ))}
             </div>
           </div>
-        )} */}
-
-        {/* Past Elections Section */}
-        {/* {displayPast.length > 0 && (
+        )}
+ 
+        {displayPast.length > 0 && (
           <div className="mb-12">
             <div className="mb-8">
               <h2 className="text-3xl font-bold tracking-tight text-[#0F172A] mb-2">Past Elections</h2>
@@ -255,7 +253,7 @@ export default function VoterLanding() {
               ))}
             </div>
           </div>
-        )} */}
+        )}
       </div>
     </div>
   );
