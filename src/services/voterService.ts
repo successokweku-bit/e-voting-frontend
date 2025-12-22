@@ -1,9 +1,9 @@
-import { API_URL, getAuthHeaders } from "./apiUtils";
+import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { RegisterCredentials } from "../types/types";
 
 export const getVoters = async () => {
   const response = await fetch(`${API_URL}/admin/users`, {
-    headers: getAuthHeaders(),
+    headers: getJsonAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch voters");
   const data = await response.json();
@@ -12,7 +12,7 @@ export const getVoters = async () => {
 
 export const getVoter = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/users/${id}`, {
-    headers: getAuthHeaders(),
+    headers: getJsonAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch voter");
   const data = await response.json();
@@ -32,9 +32,7 @@ export const updateVoter = async (id: string, data: Partial<RegisterCredentials>
 
   const response = await fetch(`${API_URL}/admin/users/${id}`, {
     method: "PUT",
-    headers: {
-      ...(localStorage.getItem("token") ? { Authorization: `Bearer ${localStorage.getItem("token")}` } : {}),
-    },
+    headers: getHeaders(),
     body: formData,
   });
 
@@ -49,7 +47,7 @@ export const updateVoter = async (id: string, data: Partial<RegisterCredentials>
 export const deleteVoter = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/users/${id}`, {
     method: "DELETE",
-    headers: getAuthHeaders(),
+    headers: getHeaders(),
   });
 
   if (!response.ok) {

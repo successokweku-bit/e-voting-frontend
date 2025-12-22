@@ -37,7 +37,7 @@ export default function VoterPositionCandidates() {
 
   // Redirect if election is inactive
   useEffect(() => {
-    if (!isElectionLoading && election && !Boolean(election.is_active)) {
+    if (!isElectionLoading && election && !election.is_active) {
       toast.error("This election is closed.");
       navigate(`/vote/elections/${electionId}`, { replace: true });
     }
@@ -47,7 +47,7 @@ export default function VoterPositionCandidates() {
     if (!election) {
       return <div className="p-10 text-center text-muted-foreground">Election not found or failed to load.</div>;
     }
-    if (!Boolean(election.is_active)) {
+    if (!election.is_active) {
       return null; // Don't render content while redirecting
     }
   }

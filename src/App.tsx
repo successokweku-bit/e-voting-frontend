@@ -29,11 +29,11 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/" element={<VoterLanding />} />
         <Route path="/verify" element={<VerifyReceipt />} />
+        <Route path="/vote/elections/:id" element={<VoterElectionDetails />} />
 
         {/* Protected Voter Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/my-votes" element={<MyVotes />} />
-          <Route path="/vote/elections/:id" element={<VoterElectionDetails />} />
           <Route path="/vote/elections/:electionId/positions/:positionId" element={<VoterPositionCandidates />} />
         </Route>
 

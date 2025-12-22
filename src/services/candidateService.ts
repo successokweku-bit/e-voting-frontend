@@ -1,13 +1,21 @@
 import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
 import type { Candidate } from "../types/types";
 
-export const createCandidate = async (data: FormData) => {
-  console.log(data);
-  
+export const createCandidate = async (data: Partial<Candidate>) => {
+   const formData = new FormData();
+   formData.append("user_id", String(data.user_id || ""));
+   formData.append("party_id", String(data.party_id || ""));
+   formData.append("election_id", String(data.election_id || ""));
+   formData.append("position_id", String(data.position_id || ""));
+   formData.append("bio", data.bio || "");
+   formData.append("manifestos", JSON.stringify(data.manifestos || []));
+
+   console.log(formData);
+   
   const response = await fetch(`${API_URL}/admin/candidates`, {
     method: "POST",
     headers: getHeaders(),
-    body: data,
+    body: formData,
   });
   if (!response.ok) {
     const errorData = await response.json().catch(() => ({}));

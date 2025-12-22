@@ -18,12 +18,11 @@ import { useUpdateElection } from "@/hooks/election/useUpdateElection";
 import { type Election } from "@/types/types";
 import { useStates } from "@/hooks/useStates";
 
+
 const ELECTION_TYPES = [
-    "Presidential",
-    "Gubernatorial",
-    "Senatorial",
-    "House of Representatives",
-    "Local Government",
+  "federal",
+  "state",
+  "local",
 ];
 
 interface EditElectionDialogProps {
@@ -84,7 +83,7 @@ export function EditElectionDialog({ election, open, onOpenChange }: EditElectio
                                         as="textarea"
                                         id="description"
                                         placeholder="Election description..."
-                                        className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                                        className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                                     />
                                     <ErrorMessage name="description" component="div" className="text-red-500 text-sm" />
                                 </UIField>

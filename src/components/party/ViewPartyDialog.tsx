@@ -15,6 +15,14 @@ interface ViewPartyDialogProps {
 
 export function ViewPartyDialog({ partyId, open, onOpenChange }: ViewPartyDialogProps) {
     const { data: party, isLoading, error } = useParty(partyId, open);
+const formatDate = (dateString: string | null | undefined) => {
+    if (!dateString) return "N/A";
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    });
+  };
 
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
@@ -41,7 +49,7 @@ export function ViewPartyDialog({ partyId, open, onOpenChange }: ViewPartyDialog
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Founded</label>
-                            <p>{party.founded_date || "N/A"}</p>
+                            <p>{formatDate(party.founded_date) || "N/A"}</p>
                         </div>
                         <div>
                             <label className="text-sm font-medium text-gray-500">Description</label>

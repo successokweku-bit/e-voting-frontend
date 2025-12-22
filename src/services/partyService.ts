@@ -7,7 +7,7 @@ export const createParty = async (data: Omit<Party, "id" | "created_at" | "logo_
   formData.append("acronym", data.acronym || "");
   formData.append("founded_date", data.founded_date || "");
   formData.append("description", data.description || "");
-  
+
   const response = await fetch(`${API_URL}/admin/parties`, {
     method: "POST",
     headers: getHeaders(),
@@ -31,7 +31,8 @@ export const getParty = async (id: string) => {
     headers: getJsonAuthHeaders(),
   });
   if (!response.ok) throw new Error("Failed to fetch party");
-  return response.json();
+  const json = await response.json();
+  return json.data || [];
 };
 
 export const updateParty = async (id: string, data: Partial<Party>) => {

@@ -53,24 +53,22 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
           }}
           validationSchema={candidateSchema}
           onSubmit={(values, { resetForm }) => {
-            const formData = new FormData();
-            formData.append("user_id", values.user_id);
-            formData.append("party_id", values.party_id);
-            formData.append("election_id", values.election_id);
-            formData.append("position_id", values.position_id);
-            formData.append("bio", values.bio);
-            formData.append("manifestos", JSON.stringify(values.manifestos));
-
-            if (values.image) {
-              formData.append("image", values.image);
-            }
-
-            mutate(formData, {
-              onSuccess: () => {
-                setOpen(false);
-                resetForm();
+            mutate(
+              {
+                user_id: Number(values.user_id),
+                party_id: Number(values.party_id),
+                election_id: Number(values.election_id),
+                position_id: Number(values.position_id),
+                bio: values.bio,
+                manifestos: values.manifestos,
               },
-            });
+              {
+                onSuccess: () => {
+                  setOpen(false);
+                  resetForm();
+                },
+              }
+            );
           }}
         >
           {({ values, setFieldValue }) => {
@@ -99,6 +97,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                         <input
                           type="file"
                           accept="image/*"
+                          title="Upload candidate photo"
                           className="absolute inset-0 opacity-0 cursor-pointer"
                           onChange={(event) => {
                             if (event.currentTarget.files && event.currentTarget.files[0]) {
@@ -189,7 +188,7 @@ export function CreateCandidateDialog({ children }: { children: React.ReactNode 
                       id="bio"
                       as="textarea"
                       placeholder="Candidate biography..."
-                      className="flex min-h-[80px] w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                      className="flex min-h-20 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     />
                     <ErrorMessage name="bio" component="div" className="text-red-500 text-sm" />
                   </UIField>

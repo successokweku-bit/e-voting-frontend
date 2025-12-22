@@ -84,7 +84,7 @@ export default function VoterLanding() {
         </div>
       </div>
 
-      <div className="container mx-auto py-12 px-4 md:px-10">
+      <div className="container md:px-36 py-12 ">
         {/* Active Elections Section */}
         <div className="mb-12">
           <div className="mb-8">
@@ -152,9 +152,7 @@ export default function VoterLanding() {
           </div>
         </div>
 
-      </div>
-
-      <div className="container mx-auto py-12 px-4 md:px-10">
+ 
  
         {displayUpcoming.length > 0 && (
           <div className="mb-12">
