@@ -67,7 +67,7 @@ export default function ForgotPassword() {
 
     setIsLoading(true);
     try {
-      await resetPassword({ token, new_password: newPassword });
+      await resetPassword({ otp_code: token, new_password: newPassword });
       toast.success("Password reset successfully!");
       setStep("success");
     } catch (error: unknown) {
@@ -109,7 +109,7 @@ export default function ForgotPassword() {
           <div className="w-full max-w-md">
             {/* Step 1: Enter Email */}
             {step === "email" && (
-              <Card className="border-0 shadow-lg">
+              <Card className="border-0 ">
                 <CardHeader className="text-center pb-2">
                   <div className="mx-auto h-12 w-12 rounded-full bg-[#134E4A]/10 flex items-center justify-center mb-4">
                     <Mail className="h-6 w-6 text-[#134E4A]" />

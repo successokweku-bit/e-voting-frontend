@@ -9,13 +9,18 @@ import {
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import { changePasswordSchema } from "@/schemas/schemas";
 import { useChangePassword } from "@/hooks/useChangePassword";
+import { Spinner } from "@/components/ui/spinner";
 
 export default function Profile() {
   const { user } = useAuth();
   const { mutate, isPending } = useChangePassword();
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   return (
@@ -62,14 +67,11 @@ export default function Profile() {
           }}
           validationSchema={changePasswordSchema}
           onSubmit={(values, { resetForm }) => {
-            mutate(
-              { id: String(user.id), data: values },
-              {
-                onSuccess: () => {
-                  resetForm();
-                },
-              }
-            );
+            mutate(values, {
+              onSuccess: () => {
+                resetForm();
+              },
+            });
           }}
         >
           {() => (

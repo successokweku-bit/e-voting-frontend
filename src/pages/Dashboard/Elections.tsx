@@ -1,15 +1,18 @@
 import { useState } from "react"
+import { useNavigate } from "react-router-dom"
 import { type ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
-import { ArrowUpDown, CircleFadingPlus, MoreVertical, Pencil, Trash } from "lucide-react"
+import { ArrowUpDown, CircleFadingPlus, MoreVertical, Pencil, Trash, BarChart3 } from "lucide-react"
 import { type Election } from "@/types/types"
 import { Spinner } from "@/components/ui/spinner"
+import { Badge } from "@/components/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
+  DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu"
 import { CreateElectionDialog } from "@/components/election/CreateElectionDialog"
 import { EditElectionDialog } from "@/components/election/EditElectionDialog"
@@ -20,6 +23,7 @@ import { ViewElectionDialog } from "@/components/election/ViewElectionDialog"
 import { Eye } from "lucide-react"
 
 const ElectionActions = ({ election }: { election: Election }) => {
+  const navigate = useNavigate()
   const [showEditDialog, setShowEditDialog] = useState(false)
   const [showDeleteDialog, setShowDeleteDialog] = useState(false)
   const [showViewDialog, setShowViewDialog] = useState(false)
@@ -38,6 +42,11 @@ const ElectionActions = ({ election }: { election: Election }) => {
             <Eye className="mr-2 h-4 w-4" />
             View
           </DropdownMenuItem>
+          <DropdownMenuItem onClick={() => navigate(`/dashboard/elections/${election.election_id}/tracking`)}>
+            <BarChart3 className="mr-2 h-4 w-4" />
+            Track
+          </DropdownMenuItem>
+          <DropdownMenuSeparator />
           <DropdownMenuItem onClick={() => setShowEditDialog(true)}>
             <Pencil className="mr-2 h-4 w-4" />
             Edit
@@ -105,10 +114,17 @@ const columns: ColumnDef<Election>[] = [
     }
   },
   {
-    accessorKey: "is_active",
+    accessorKey: "status",
     header: "Status",
     cell: ({ row }) => {
-      return row.getValue("is_active") ? "Active" : "Inactive";
+      const status = row.getValue("status") as string;
+      const statusConfig: Record<string, { label: string; className: string }> = {
+        ongoing: { label: "Ongoing", className: "bg-emerald-500 hover:bg-emerald-600 text-white border-0" },
+        upcoming: { label: "Upcoming", className: "bg-blue-500 hover:bg-blue-600 text-white border-0" },
+        past: { label: "Past", className: "bg-slate-500 hover:bg-slate-600 text-white border-0" },
+      };
+      const config = statusConfig[status] || { label: status || "Unknown", className: "bg-gray-500 text-white border-0" };
+      return <Badge className={config.className}>{config.label}</Badge>;
     }
   },
   {

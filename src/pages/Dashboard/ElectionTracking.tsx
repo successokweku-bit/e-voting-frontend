@@ -14,9 +14,10 @@ import {
   TrendingUp,
   Users,
   Trophy,
-  Calendar
+  Calendar,
+  Activity
 } from "lucide-react";
-import type { ElectionTrackingData, TrackingPosition, TrackingCandidate } from "@/types/types";
+import type { ElectionTrackingData, TrackingPosition, TrackingCandidate, TimelineEvent } from "@/types/types";
 
 // Stat Card Component
 const StatCard = ({
@@ -53,23 +54,26 @@ const StatCard = ({
 
 // Position Card Component
 const PositionCard = ({ position, index }: { position: TrackingPosition; index: number }) => {
-  const maxVotes = Math.max(...position.candidates.map(c => c.vote_count), 1);
-  const leadingCandidate = position.candidates.reduce((prev, current) =>
-    (prev.vote_count > current.vote_count) ? prev : current, position.candidates[0]
-  );
-
   return (
     <Card
       className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-500 hover:-translate-y-1"
       style={{ animationDelay: `${index * 100}ms` }}
     >
-      <CardHeader className="bg-gradient-to-r from-[#134E4A] to-[#0D3D38] text-white p-5">
+      <CardHeader className="bg-linear-to-r from-[#134E4A] to-[#0D3D38] text-white p-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="h-10 w-10 rounded-xl bg-white/20 flex items-center justify-center backdrop-blur-sm">
               <span className="text-lg font-bold">{index + 1}</span>
             </div>
-            <CardTitle className="text-lg font-semibold">{position.title}</CardTitle>
+            <div>
+              <CardTitle className="text-lg font-semibold">{position.title}</CardTitle>
+              {position.winner && (
+                <p className="text-xs text-white/70 mt-0.5 flex items-center gap-1">
+                  <Trophy className="h-3 w-3 text-amber-400" />
+                  Winner: {position.winner}
+                </p>
+              )}
+            </div>
           </div>
           <Badge className="bg-white/20 text-white border-0 hover:bg-white/30">
             {position.total_votes} votes
@@ -85,8 +89,7 @@ const PositionCard = ({ position, index }: { position: TrackingPosition; index: 
         ) : (
           <div className="space-y-4">
             {position.candidates.map((candidate: TrackingCandidate, candidateIndex: number) => {
-              const percentage = maxVotes > 0 ? (candidate.vote_count / maxVotes) * 100 : 0;
-              const isLeading = leadingCandidate && candidate.candidate_id === leadingCandidate.candidate_id && candidate.vote_count > 0;
+              const isWinner = position.winner === candidate.candidate_name;
 
               return (
                 <div
@@ -97,21 +100,26 @@ const PositionCard = ({ position, index }: { position: TrackingPosition; index: 
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
                       <span className="font-medium text-sm">{candidate.candidate_name}</span>
-                      {isLeading && (
+                      {isWinner && (
                         <Trophy className="h-4 w-4 text-amber-500" />
                       )}
                     </div>
-                    <span className="text-sm font-semibold text-muted-foreground">
-                      {candidate.vote_count} votes
-                    </span>
+                    <div className="flex items-center gap-2">
+                      <span className="text-xs text-muted-foreground">
+                        {candidate.percentage.toFixed(1)}%
+                      </span>
+                      <span className="text-sm font-semibold text-muted-foreground">
+                        {candidate.vote_count} votes
+                      </span>
+                    </div>
                   </div>
                   <div className="relative h-3 bg-slate-100 rounded-full overflow-hidden">
                     <div
-                      className={`absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-out ${isLeading
-                          ? 'bg-gradient-to-r from-[#134E4A] to-emerald-500'
-                          : 'bg-gradient-to-r from-slate-400 to-slate-500'
+                      className={`absolute inset-y-0 left-0 rounded-full transition-all duration-1000 ease-out ${isWinner
+                        ? 'bg-linear-to-r from-[#134E4A] to-emerald-500'
+                        : 'bg-linear-to-r from-slate-400 to-slate-500'
                         }`}
-                      style={{ width: `${percentage}%` }}
+                      style={{ width: `${candidate.percentage}%` }}
                     />
                   </div>
                 </div>
@@ -125,21 +133,14 @@ const PositionCard = ({ position, index }: { position: TrackingPosition; index: 
 };
 
 // Status Badge Component
-const StatusBadge = ({ status, isActive }: { status: string; isActive: boolean }) => {
+const StatusBadge = ({ status }: { status: string }) => {
   const getStatusConfig = () => {
-    if (isActive) {
-      return {
-        label: 'Active',
-        className: 'bg-emerald-500 hover:bg-emerald-600 animate-pulse',
-        icon: <span className="h-2 w-2 rounded-full bg-white mr-2" />
-      };
-    }
     switch (status) {
-      case 'past':
+      case 'ongoing':
         return {
-          label: 'Completed',
-          className: 'bg-slate-500 hover:bg-slate-600',
-          icon: <CheckCircle2 className="h-3 w-3 mr-1" />
+          label: 'Ongoing',
+          className: 'bg-emerald-500 hover:bg-emerald-600',
+          icon: <span className="h-2 w-2 rounded-full bg-white mr-2 animate-pulse" />
         };
       case 'upcoming':
         return {
@@ -147,9 +148,15 @@ const StatusBadge = ({ status, isActive }: { status: string; isActive: boolean }
           className: 'bg-blue-500 hover:bg-blue-600',
           icon: <Clock className="h-3 w-3 mr-1" />
         };
+      case 'past':
+        return {
+          label: 'Completed',
+          className: 'bg-slate-500 hover:bg-slate-600',
+          icon: <CheckCircle2 className="h-3 w-3 mr-1" />
+        };
       default:
         return {
-          label: status,
+          label: status || 'Unknown',
           className: 'bg-gray-500 hover:bg-gray-600',
           icon: null
         };
@@ -206,7 +213,7 @@ export default function ElectionTracking() {
     );
   }
 
-  const { election, totals, positions } = trackingData;
+  const { election, totals, positions, timeline } = trackingData;
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -221,7 +228,7 @@ export default function ElectionTracking() {
   return (
     <div className="min-h-screen bg-slate-50">
       {/* Hero Header */}
-      <div className="relative bg-gradient-to-br from-[#134E4A] via-[#0F3D39] to-[#0A2D2A] text-white overflow-hidden">
+      <div className="relative bg-linear-to-br from-[#134E4A] via-[#0F3D39] to-[#0A2D2A] text-white overflow-hidden">
         {/* Background Pattern */}
         <div className="absolute inset-0 opacity-10">
           <div className="absolute top-0 left-0 w-96 h-96 bg-white rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2" />
@@ -241,8 +248,8 @@ export default function ElectionTracking() {
           <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-6">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <StatusBadge status={election.status} isActive={election.is_active} />
-                {election.is_active && (
+                <StatusBadge status={election.status} />
+                {election.status === 'ongoing' && (
                   <div className="flex items-center text-sm font-medium bg-white/10 px-3 py-1 rounded-full backdrop-blur-sm">
                     <span className="flex h-2 w-2 rounded-full bg-green-400 mr-2 animate-pulse" />
                     Live Tracking
@@ -353,9 +360,57 @@ export default function ElectionTracking() {
         )}
       </div>
 
+      {/* Vote Activity Timeline */}
+      {timeline && timeline.length > 0 && (
+        <div className="container mx-auto pb-10 px-4 md:px-10">
+          <Card className="border-0 shadow-lg">
+            <CardHeader className="pb-4">
+              <div className="flex items-center gap-2">
+                <Activity className="h-5 w-5 text-[#134E4A]" />
+                <CardTitle className="text-xl font-bold text-slate-800">Vote Activity Timeline</CardTitle>
+              </div>
+              <p className="text-sm text-muted-foreground">Hourly vote distribution</p>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-3">
+                {timeline.map((event: TimelineEvent, index: number) => {
+                  const maxVotes = Math.max(...timeline.map(e => e.votes), 1);
+                  const percentage = (event.votes / maxVotes) * 100;
+                  const formattedTime = new Date(event.hour).toLocaleString('en-US', {
+                    month: 'short',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  });
+
+                  return (
+                    <div key={index} className="flex items-center gap-4">
+                      <div className="w-32 text-xs text-muted-foreground font-medium shrink-0">
+                        {formattedTime}
+                      </div>
+                      <div className="flex-1 h-6 bg-slate-100 rounded-full overflow-hidden relative">
+                        <div
+                          className="absolute inset-y-0 left-0 bg-linear-to-r from-[#134E4A] to-emerald-500 rounded-full transition-all duration-500"
+                          style={{ width: `${percentage}%` }}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-end pr-3">
+                          <span className="text-xs font-semibold text-slate-600">
+                            {event.votes} votes
+                          </span>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+
       {/* Footer Note */}
       <div className="container mx-auto px-4 md:px-10 pb-10">
-        <div className="bg-gradient-to-r from-slate-100 to-slate-50 rounded-xl p-4 flex items-center gap-3">
+        <div className="bg-linear-to-r from-slate-100 to-slate-50 rounded-xl p-4 flex items-center gap-3">
           <div className="h-10 w-10 rounded-lg bg-[#134E4A]/10 flex items-center justify-center">
             <ShieldCheck className="h-5 w-5 text-[#134E4A]" />
           </div>

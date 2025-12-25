@@ -9,7 +9,6 @@ import {
   Briefcase,
   Settings,
   LogOut,
-  ChevronRight,
 } from "lucide-react"
 
 import {
@@ -24,15 +23,7 @@ import {
   SidebarMenuItem,
   SidebarRail,
   SidebarFooter,
-  SidebarMenuSub,
-  SidebarMenuSubItem,
-  SidebarMenuSubButton,
 } from "@/components/ui/sidebar"
-import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@/components/ui/collapsible"
 import { useAuth } from "@/contexts/AuthContext"
 
 // Menu data with icons
@@ -66,24 +57,7 @@ const navMain = [
     title: "Elections",
     url: "/dashboard/elections",
     icon: Vote,
-    items: [
-      {
-        title: "View Elections",
-        url: "/dashboard/elections",
-      },
-      {
-        title: "Active Elections",
-        url: "/dashboard/elections/active",
-      },
-      {
-        title: "Upcoming Elections",
-        url: "/dashboard/elections/upcoming",
-      },
-      {
-        title: "Past Elections",
-        url: "/dashboard/elections/past",
-      },
-    ],
+
   },
 
   {
@@ -120,58 +94,20 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Platform</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {navMain.map((item) => {
-                if (!item.items?.length) {
-                  return (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton
-                        asChild
-                        tooltip={item.title}
-                        isActive={location.pathname === item.url}
-                      >
-                        <Link to={item.url}>
-                          {item.icon && <item.icon />}
-                          <span>{item.title}</span>
-                        </Link>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )
-                }
-                return (
-                  <Collapsible
-                    key={item.title}
+              {navMain.map((item) => (
+                <SidebarMenuItem key={item.title}>
+                  <SidebarMenuButton
                     asChild
-                    defaultOpen={item.items.some((subItem) => subItem.url === location.pathname)}
-                    className="group/collapsible"
+                    tooltip={item.title}
+                    isActive={location.pathname === item.url}
                   >
-                    <SidebarMenuItem>
-                      <CollapsibleTrigger asChild>
-                        <SidebarMenuButton tooltip={item.title}>
-                          {item.icon && <item.icon />}
-                          <span>{item.title}</span>
-                          <ChevronRight className="ml-auto transition-transform duration-200 group-data-[state=open]/collapsible:rotate-90" />
-                        </SidebarMenuButton>
-                      </CollapsibleTrigger>
-                      <CollapsibleContent>
-                        <SidebarMenuSub>
-                          {item.items.map((subItem) => (
-                            <SidebarMenuSubItem key={subItem.title}>
-                              <SidebarMenuSubButton
-                                asChild
-                                isActive={location.pathname === subItem.url}
-                              >
-                                <Link to={subItem.url}>
-                                  <span>{subItem.title}</span>
-                                </Link>
-                              </SidebarMenuSubButton>
-                            </SidebarMenuSubItem>
-                          ))}
-                        </SidebarMenuSub>
-                      </CollapsibleContent>
-                    </SidebarMenuItem>
-                  </Collapsible>
-                )
-              })}
+                    <Link to={item.url}>
+                      {item.icon && <item.icon />}
+                      <span>{item.title}</span>
+                    </Link>
+                  </SidebarMenuButton>
+                </SidebarMenuItem>
+              ))}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>

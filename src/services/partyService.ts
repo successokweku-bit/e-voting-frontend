@@ -1,4 +1,4 @@
-import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
+import { API_URL, getHeaders, getJsonAuthHeaders, getApiError } from "./apiUtils";
 import type { Party } from "../types/types";
 
 export const createParty = async (data: Omit<Party, "id" | "created_at" | "logo_url">) => {
@@ -13,7 +13,12 @@ export const createParty = async (data: Omit<Party, "id" | "created_at" | "logo_
     headers: getHeaders(),
     body: formData,
   });
-  if (!response.ok) throw new Error("Failed to create party");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to create party");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };
 
@@ -21,7 +26,12 @@ export const getParties = async (): Promise<Party[]> => {
   const response = await fetch(`${API_URL}/admin/parties`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch parties");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch parties");
+    throw new Error(errorMessage);
+  }
+
   const json = await response.json();
   return json.data || [];
 };
@@ -30,7 +40,12 @@ export const getParty = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/parties/${id}`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch party");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch party details");
+    throw new Error(errorMessage);
+  }
+
   const json = await response.json();
   return json.data || [];
 };
@@ -47,7 +62,12 @@ export const updateParty = async (id: string, data: Partial<Party>) => {
     headers: getHeaders(),
     body: formData,
   });
-  if (!response.ok) throw new Error("Failed to update party");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to update party");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };
 
@@ -56,6 +76,11 @@ export const deleteParty = async (id: string | number) => {
     method: "DELETE",
     headers: getHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to delete party");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to delete party");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };

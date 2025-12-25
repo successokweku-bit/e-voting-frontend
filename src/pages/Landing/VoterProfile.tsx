@@ -182,14 +182,11 @@ export default function VoterProfile() {
                 }}
                 validationSchema={changePasswordSchema}
                 onSubmit={(values, { resetForm }) => {
-                  mutate(
-                    { id: String(user.id), data: values },
-                    {
-                      onSuccess: () => {
-                        resetForm();
-                      },
-                    }
-                  );
+                  mutate(values, {
+                    onSuccess: () => {
+                      resetForm();
+                    },
+                  });
                 }}
               >
                 {() => (

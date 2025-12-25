@@ -116,9 +116,9 @@ export default function VoterElectionDetails() {
             election.positions.map((position, index) => (
               <Card
                 key={position.id}
-                className={`group cursor-pointer hover:shadow-md transition-all duration-200 ${Boolean(election.is_active) ? 'hover:border-[#134E4A]' : 'opacity-75'}`}
+                className={`group cursor-pointer hover:shadow-md transition-all duration-200 ${election.is_active ? 'hover:border-[#134E4A]' : 'opacity-75'}`}
                 onClick={() => {
-                  if (Boolean(election.is_active)) {
+                  if (election.is_active) {
                     navigate(`/vote/elections/${id}/positions/${position.id}`);
                   } else {
                     toast.error("Voting is effectively closed for this election.");

@@ -1,7 +1,7 @@
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
-import { Calendar, Users, ArrowRight, ShieldCheck, Vote } from "lucide-react";
+import { Calendar, Users, ArrowRight, ShieldCheck, Vote, BarChart2 } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { UserNav } from "@/components/UserNav";
@@ -71,15 +71,7 @@ export default function VoterLanding() {
               </div>
             </div>
 
-            <div className="flex items-center gap-4 bg-white/10 rounded-xl p-4 pr-8 backdrop-blur-sm border border-white/10">
-              <div className="bg-white/20 p-3 rounded-lg">
-                <Users className="h-6 w-6 text-white" />
-              </div>
-              <div>
-                <p className="text-2xl font-bold">3,003</p>
-                <p className="text-sm text-white/70 font-medium">Total Voters</p>
-              </div>
-            </div>
+
           </div>
         </div>
       </div>
@@ -111,7 +103,7 @@ export default function VoterLanding() {
                       {election.title}
                     </CardTitle>
                     <p className="text-muted-foreground mt-2 text-sm">
-                      Annual election for student body representatives
+                      {election.description || `${election.election_type} election`}
                     </p>
                   </CardHeader>
                   <CardContent className="flex-1 space-y-4">
@@ -129,8 +121,8 @@ export default function VoterLanding() {
                         <Users className="h-4 w-4" />
                       </div>
                       <div>
-                        <p className="font-medium text-slate-900">Total Participants</p>
-                        <p className="text-slate-500">2,847 voters</p>
+                        <p className="font-medium text-slate-900">Total Votes</p>
+                        <p className="text-slate-500">{election.total_votes?.toLocaleString() || 0} votes cast</p>
                       </div>
                     </div>
                   </CardContent>
@@ -152,8 +144,8 @@ export default function VoterLanding() {
           </div>
         </div>
 
- 
- 
+
+
         {displayUpcoming.length > 0 && (
           <div className="mb-12">
             <div className="mb-8">
@@ -178,7 +170,7 @@ export default function VoterLanding() {
                       {election.title}
                     </CardTitle>
                     <p className="text-muted-foreground mt-2 text-sm">
-                      Starting soon
+                      {election.description || `${election.election_type} election`}
                     </p>
                   </CardHeader>
                   <CardContent className="flex-1 space-y-4">
@@ -206,7 +198,7 @@ export default function VoterLanding() {
             </div>
           </div>
         )}
- 
+
         {displayPast.length > 0 && (
           <div className="mb-12">
             <div className="mb-8">
@@ -240,10 +232,11 @@ export default function VoterLanding() {
                   </CardContent>
                   <CardFooter className="pt-2">
                     <Button
-                      variant="ghost"
-                      className="w-full border"
-                      onClick={() => navigate(`/vote/elections/${election.id}`)}
+                      variant="outline"
+                      className="w-full"
+                      onClick={() => navigate(`/elections/${election.id}/results`)}
                     >
+                      <BarChart2 className="mr-2 h-4 w-4" />
                       View Results
                     </Button>
                   </CardFooter>

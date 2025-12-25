@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Spinner } from "@/components/ui/spinner"
 import { type ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
@@ -135,7 +136,11 @@ export default function Parties() {
   const { data: parties, isLoading } = useParties()
 
   if (isLoading) {
-    return <div className="container mx-auto md:px-10 py-10">Loading...</div>
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   const data = parties || []

@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
-import { getDashActiveElections, getDashElection, getDashPastElections, getDashUpcomingElections, getElection, voteSecure, getMyVote } from "../../services/services";
+import { getDashActiveElections, getDashElection, getDashPastElections, getDashUpcomingElections, getElection, voteSecure, getMyVote, getElectionTracking, getElectionResults } from "../../services/services";
 import { type Election, type ElectionDetails, type PublicElection } from "../../types/types";
 
 export const useElection = (id: number, enabled: boolean = true) => {
@@ -54,13 +54,27 @@ export const useVote = () => {
 
 
 
-
-export const useMyVote = (electionId: number) => {
+export const useMyVotes = () => {
     return useQuery({
-        queryKey: ["my-vote", electionId],
-        queryFn: () => getMyVote(electionId),
-        enabled: !!electionId,
+        queryKey: ["my-votes"],
+        queryFn: () => getMyVote(),
         retry: false,
     });
 };
 
+export const useElectionTracking = (id: number, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["election-tracking", id],
+        queryFn: () => getElectionTracking(id),
+        enabled: !!id && enabled,
+        refetchInterval: 30000, // Refetch every 30 seconds for live updates
+    });
+};
+
+export const useElectionResults = (id: number, enabled: boolean = true) => {
+    return useQuery({
+        queryKey: ["election-results", id],
+        queryFn: () => getElectionResults(id),
+        enabled: !!id && enabled,
+    });
+};

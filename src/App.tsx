@@ -13,12 +13,16 @@ import ActiveElections from "./pages/Dashboard/ActiveElections";
 import UpcomingElections from "./pages/Dashboard/UpcomingElections";
 import PastElections from "./pages/Dashboard/PastElections";
 import ElectionDetails from "./pages/Dashboard/ElectionDetails";
+import ElectionTracking from "./pages/Dashboard/ElectionTracking";
 import Profile from "./pages/Dashboard/Profile";
 import VoterLanding from "./pages/Landing/VoterLanding";
 import VoterElectionDetails from "./pages/Landing/VoterElectionDetails";
 import VoterPositionCandidates from "./pages/Landing/VoterPositionCandidates";
 import VerifyReceipt from "./pages/Landing/VerifyReceipt";
 import MyVotes from "./pages/Landing/MyVotes";
+import ElectionResults from "./pages/Landing/ElectionResults";
+import VoterProfile from "./pages/Landing/VoterProfile";
+import ForgotPassword from "./pages/Dashboard/ForgotPassword";
 
 function App() {
   return (
@@ -27,13 +31,16 @@ function App() {
         {/* Public Routes */}
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
         <Route path="/" element={<VoterLanding />} />
         <Route path="/verify" element={<VerifyReceipt />} />
         <Route path="/vote/elections/:id" element={<VoterElectionDetails />} />
+        <Route path="/elections/:id/results" element={<ElectionResults />} />
 
         {/* Protected Voter Routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/my-votes" element={<MyVotes />} />
+          <Route path="/profile" element={<VoterProfile />} />
           <Route path="/vote/elections/:electionId/positions/:positionId" element={<VoterPositionCandidates />} />
         </Route>
 
@@ -50,6 +57,7 @@ function App() {
             <Route path="/dashboard/elections/upcoming" element={<UpcomingElections />} />
             <Route path="/dashboard/elections/past" element={<PastElections />} />
             <Route path="/dashboard/elections/:id" element={<ElectionDetails />} />
+            <Route path="/dashboard/elections/:id/tracking" element={<ElectionTracking />} />
             <Route path="/dashboard/profile" element={<Profile />} />
           </Route>
         </Route>

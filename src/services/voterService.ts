@@ -1,11 +1,16 @@
-import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
+import { API_URL, getHeaders, getJsonAuthHeaders, getApiError } from "./apiUtils";
 import type { RegisterCredentials } from "../types/types";
 
 export const getVoters = async () => {
   const response = await fetch(`${API_URL}/admin/users`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch voters");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch voters");
+    throw new Error(errorMessage);
+  }
+
   const data = await response.json();
   return data.data;
 };
@@ -14,14 +19,18 @@ export const getVoter = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/users/${id}`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch voter");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch voter details");
+    throw new Error(errorMessage);
+  }
+
   const data = await response.json();
   return data.data;
 };
 
 export const updateVoter = async (id: string, data: Partial<RegisterCredentials>) => {
   const formData = new FormData();
-  // formData.append("user_id", data.user_id || "");
   formData.append("nin", data.nin || "");
   formData.append("is_active", String(data.is_active ?? ""));
   formData.append("is_verified", String(data.is_verified ?? ""));
@@ -37,8 +46,8 @@ export const updateVoter = async (id: string, data: Partial<RegisterCredentials>
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to update voter");
+    const errorMessage = await getApiError(response, "Failed to update voter");
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -51,8 +60,8 @@ export const deleteVoter = async (id: string) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to delete voter");
+    const errorMessage = await getApiError(response, "Failed to delete voter");
+    throw new Error(errorMessage);
   }
 
   return response.json();

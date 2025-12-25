@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { Spinner } from "@/components/ui/spinner"
 import { type ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/data-table"
 import { Button } from "@/components/ui/button"
@@ -103,7 +104,11 @@ export default function Positions() {
   const { data: positions, isLoading } = usePositions()
 
   if (isLoading) {
-    return <div>Loading...</div>
+    return (
+      <div className="flex h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   const data = positions || [];

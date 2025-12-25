@@ -5,6 +5,7 @@ import { useDashElection, useVote } from "@/hooks/election/useElection";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { ArrowLeft, CheckCircle2, CheckSquare, Check, Loader2, Copy } from "lucide-react";
+import { Spinner } from "@/components/ui/spinner";
 import { Badge } from "@/components/ui/badge";
 import {
   Dialog,
@@ -101,8 +102,26 @@ export default function VoterPositionCandidates() {
             }
           },
           onError: (error: Error) => {
-            toast.error(error.message || "Failed to cast vote.");
             setIsVoteDialogOpen(false);
+
+            // Check if user has already voted for this position
+            const errorMessage = error.message?.toLowerCase() || "";
+            if (errorMessage.includes("already voted")) {
+              toast.error("You have already voted for this position", {
+                description: "Each voter can only cast one vote per position.",
+                action: {
+                  label: "View My Votes",
+                  onClick: () => navigate("/my-votes"),
+                },
+                duration: 5000,
+              });
+              // Redirect back to election details after a delay
+              setTimeout(() => {
+                navigate(`/vote/elections/${electionId}`);
+              }, 2000);
+            } else {
+              toast.error(error.message || "Failed to cast vote.");
+            }
           },
         }
       );
@@ -110,7 +129,11 @@ export default function VoterPositionCandidates() {
   };
 
   if (isLoading) {
-    return <div className="p-10 container mx-auto">Loading candidates...</div>;
+    return (
+      <div className="flex bg-slate-50 h-screen w-full items-center justify-center">
+        <Spinner className="size-10 text-[#134E4A]" />
+      </div>
+    );
   }
 
   return (
@@ -241,9 +264,6 @@ export default function VoterPositionCandidates() {
         ) : (
           <div className="text-center py-10">
             <p className="text-muted-foreground text-lg">No candidates found for this position.</p>
-            <p className="text-sm text-slate-500 mt-2">
-              (Ensure candidates are created with position ID "{positionId}" and election ID "{electionId}")
-            </p>
           </div>
         )}
 

@@ -1,6 +1,5 @@
 import {
   Avatar,
-  AvatarFallback,
   AvatarImage,
 } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
@@ -14,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { useAuth } from "@/contexts/AuthContext";
-import { LogOut, User, Vote } from "lucide-react";
+import { LogOut, User, Vote, ChevronDown } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
 export function UserNav() {
@@ -24,7 +23,7 @@ export function UserNav() {
   if (!user) {
     return (
       <Button
-        className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold"
+        className="bg-white text-[#134E4A] hover:bg-white/90 font-semibold px-6 py-2 h-auto"
         onClick={() => navigate("/login")}
       >
         Login
@@ -35,11 +34,21 @@ export function UserNav() {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-          <Avatar className="h-8 w-8">
-            <AvatarImage src={user.profile_image_url || ""} alt={user.full_name} />
-            <AvatarFallback>{user.full_name?.charAt(0).toUpperCase() || "U"}</AvatarFallback>
+        <Button
+          variant="ghost"
+          className="relative flex items-center gap-3 h-auto py-2 px-3 rounded-full bg-white/10 hover:bg-white/20 border border-white/20"
+        >
+          <Avatar className="h-10 w-10 border-2 border-white/30">
+            <AvatarImage
+              src={user.profile_image_url || `https://ui-avatars.com/api/?name=${encodeURIComponent(user.full_name || 'User')}&background=134E4A&color=fff&bold=true`}
+              alt={user.full_name}
+            />
           </Avatar>
+          <div className="hidden md:flex flex-col items-start text-white">
+            <span className="text-sm font-medium truncate max-w-[120px]">{user.full_name}</span>
+            <span className="text-xs text-white/60 capitalize">{user.role?.replace('_', ' ')}</span>
+          </div>
+          <ChevronDown className="h-4 w-4 text-white/60 hidden md:block" />
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56" align="end" forceMount>
@@ -53,7 +62,7 @@ export function UserNav() {
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuGroup>
-          {['admin', 'super_admin', 'super admin'].includes(user.role) && (
+          {['admin', 'super_admin', 'super admin'].includes(user.role) ? (
             <>
               <DropdownMenuItem onClick={() => navigate("/dashboard")}>
                 <User className="mr-2 h-4 w-4" />
@@ -64,6 +73,13 @@ export function UserNav() {
                 <span>Profile</span>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
+            </>
+          ) : (
+            <>
+              <DropdownMenuItem onClick={() => navigate("/profile")}>
+                <User className="mr-2 h-4 w-4" />
+                <span>Profile & Settings</span>
+              </DropdownMenuItem>
             </>
           )}
           <DropdownMenuItem onClick={() => navigate("/my-votes")}>

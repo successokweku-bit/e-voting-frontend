@@ -1,4 +1,4 @@
-import { API_URL, getHeaders, getJsonAuthHeaders } from "./apiUtils";
+import { API_URL, getHeaders, getJsonAuthHeaders, getApiError } from "./apiUtils";
 import type { Position } from "../types/types";
 
 export const createPosition = async (data: Omit<Position, "position_id">) => {
@@ -12,7 +12,12 @@ export const createPosition = async (data: Omit<Position, "position_id">) => {
     headers: getHeaders(),
     body: formData,
   });
-  if (!response.ok) throw new Error("Failed to create position");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to create position");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };
 
@@ -20,7 +25,12 @@ export const getPositions = async () => {
   const response = await fetch(`${API_URL}/admin/positions`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch positions");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch positions");
+    throw new Error(errorMessage);
+  }
+
   const json = await response.json();
   return json.data || [];
 };
@@ -29,7 +39,12 @@ export const getPosition = async (id: string) => {
   const response = await fetch(`${API_URL}/admin/positions/${id}`, {
     headers: getJsonAuthHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to fetch position");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to fetch position details");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };
 
@@ -46,8 +61,8 @@ export const updatePosition = async (id: string, data: Partial<Position>) => {
   });
 
   if (!response.ok) {
-    const errorData = await response.json().catch(() => ({}));
-    throw new Error(errorData.message || "Failed to update position");
+    const errorMessage = await getApiError(response, "Failed to update position");
+    throw new Error(errorMessage);
   }
 
   return response.json();
@@ -58,6 +73,11 @@ export const deletePosition = async (id: string) => {
     method: "DELETE",
     headers: getHeaders(),
   });
-  if (!response.ok) throw new Error("Failed to delete position");
+
+  if (!response.ok) {
+    const errorMessage = await getApiError(response, "Failed to delete position");
+    throw new Error(errorMessage);
+  }
+
   return response.json();
 };
